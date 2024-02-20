@@ -73,68 +73,68 @@ public class Knowledge {
 
         markersPositions = new HashMap<>();
 
-        markersPositions.put("f t l 50", new Vector2(-50, 39));
-        markersPositions.put("f t l 40", new Vector2(-40, 39));
-        markersPositions.put("f t l 30", new Vector2(-30, 39));
-        markersPositions.put("f t l 20", new Vector2(-20, 39));
-        markersPositions.put("f t l 10", new Vector2(-10, 39));
-        markersPositions.put("f t 0", new Vector2(0, 39));
-        markersPositions.put("f t r 10", new Vector2(10, 39));
-        markersPositions.put("f t r 20", new Vector2(20, 39));
-        markersPositions.put("f t r 30", new Vector2(30, 39));
-        markersPositions.put("f t r 40", new Vector2(40, 39));
-        markersPositions.put("f t r 50", new Vector2(50, 39));
+        markersPositions.put("f t l 50", new Vector2(-50, -39));
+        markersPositions.put("f t l 40", new Vector2(-40, -39));
+        markersPositions.put("f t l 30", new Vector2(-30, -39));
+        markersPositions.put("f t l 20", new Vector2(-20, -39));
+        markersPositions.put("f t l 10", new Vector2(-10, -39));
+        markersPositions.put("f t 0", new Vector2(0, -39));
+        markersPositions.put("f t r 10", new Vector2(10, -39));
+        markersPositions.put("f t r 20", new Vector2(20, -39));
+        markersPositions.put("f t r 30", new Vector2(30, -39));
+        markersPositions.put("f t r 40", new Vector2(40, -39));
+        markersPositions.put("f t r 50", new Vector2(50, -39));
 
-        markersPositions.put("f b l 50", new Vector2(-50, -39));
-        markersPositions.put("f b l 40", new Vector2(-40, -39));
-        markersPositions.put("f b l 30", new Vector2(-30, -39));
-        markersPositions.put("f b l 20", new Vector2(-20, -39));
-        markersPositions.put("f b l 10", new Vector2(-10, -39));
-        markersPositions.put("f b 0", new Vector2(0, -39));
-        markersPositions.put("f b r 10", new Vector2(10, -39));
-        markersPositions.put("f b r 20", new Vector2(20, -39));
-        markersPositions.put("f b r 30", new Vector2(30, -39));
-        markersPositions.put("f b r 40", new Vector2(40, -39));
-        markersPositions.put("f b r 50", new Vector2(50, -39));
+        markersPositions.put("f b l 50", new Vector2(-50, 39));
+        markersPositions.put("f b l 40", new Vector2(-40, 39));
+        markersPositions.put("f b l 30", new Vector2(-30, 39));
+        markersPositions.put("f b l 20", new Vector2(-20, 39));
+        markersPositions.put("f b l 10", new Vector2(-10, 39));
+        markersPositions.put("f b 0", new Vector2(0, 39));
+        markersPositions.put("f b r 10", new Vector2(10, 39));
+        markersPositions.put("f b r 20", new Vector2(20, 39));
+        markersPositions.put("f b r 30", new Vector2(30, 39));
+        markersPositions.put("f b r 40", new Vector2(40, 39));
+        markersPositions.put("f b r 50", new Vector2(50, 39));
 
-        markersPositions.put("f l t 30", new Vector2(-57.5, 30));
-        markersPositions.put("f l t 20", new Vector2(-57.5, 20));
-        markersPositions.put("f l t 10", new Vector2(-57.5, 10));
+        markersPositions.put("f l t 30", new Vector2(-57.5, -30));
+        markersPositions.put("f l t 20", new Vector2(-57.5, -20));
+        markersPositions.put("f l t 10", new Vector2(-57.5, -10));
         markersPositions.put("f l 0", new Vector2(-57.5, 0));
-        markersPositions.put("f l b 10", new Vector2(-57.5, -10));
-        markersPositions.put("f l b 20", new Vector2(-57.5, -20));
-        markersPositions.put("f l b 30", new Vector2(-57.5, -30));
+        markersPositions.put("f l b 10", new Vector2(-57.5, 10));
+        markersPositions.put("f l b 20", new Vector2(-57.5, 20));
+        markersPositions.put("f l b 30", new Vector2(-57.5, 30));
 
-        markersPositions.put("f r t 30", new Vector2(57.5, 30));
-        markersPositions.put("f r t 20", new Vector2(57.5, 20));
-        markersPositions.put("f r t 10", new Vector2(57.5, 10));
+        markersPositions.put("f r t 30", new Vector2(57.5, -30));
+        markersPositions.put("f r t 20", new Vector2(57.5, -20));
+        markersPositions.put("f r t 10", new Vector2(57.5, -10));
         markersPositions.put("f r 0", new Vector2(57.5, 0));
-        markersPositions.put("f r b 10", new Vector2(57.5, -10));
-        markersPositions.put("f r b 20", new Vector2(57.5, -20));
-        markersPositions.put("f r b 30", new Vector2(57.5, -30));
+        markersPositions.put("f r b 10", new Vector2(57.5, 10));
+        markersPositions.put("f r b 20", new Vector2(57.5, 20));
+        markersPositions.put("f r b 30", new Vector2(57.5, 30));
 
-        markersPositions.put("f l t", new Vector2(-52.5, 34));
-        markersPositions.put("f c t", new Vector2(0, 34));
-        markersPositions.put("f r t", new Vector2(52.5, 34));
-        markersPositions.put("f l b", new Vector2(-52.5, -34));
-        markersPositions.put("f c b", new Vector2(0, -34));
-        markersPositions.put("f r b", new Vector2(52.5, -34));
+        markersPositions.put("f l t", new Vector2(-52.5, -34));
+        markersPositions.put("f c t", new Vector2(0, -34));
+        markersPositions.put("f r t", new Vector2(52.5, -34));
+        markersPositions.put("f l b", new Vector2(-52.5, 34));
+        markersPositions.put("f c b", new Vector2(0, 34));
+        markersPositions.put("f r b", new Vector2(52.5, 34));
 
-        markersPositions.put("f g l t", new Vector2(-52.5, 7.01));
+        markersPositions.put("f g l t", new Vector2(-52.5, -7.01));
         markersPositions.put("g l", new Vector2(-52.5, 0));
-        markersPositions.put("f g l b", new Vector2(-52.5, -7.01));
+        markersPositions.put("f g l b", new Vector2(-52.5, 7.01));
 
-        markersPositions.put("f g r t", new Vector2(52.5, 7.01));
+        markersPositions.put("f g r t", new Vector2(52.5, -7.01));
         markersPositions.put("g r", new Vector2(52.5, 0));
-        markersPositions.put("f g r b", new Vector2(52.5, -7.01));
+        markersPositions.put("f g r b", new Vector2(52.5, 7.01));
 
-        markersPositions.put("f p l t", new Vector2(-36, 20.15));
+        markersPositions.put("f p l t", new Vector2(-36, -20.15));
         markersPositions.put("f p l c", new Vector2(-36, 0));
-        markersPositions.put("f p l b", new Vector2(-36, -20.15));
+        markersPositions.put("f p l b", new Vector2(-36, 20.15));
 
-        markersPositions.put("f p r t", new Vector2(36, 20.15));
+        markersPositions.put("f p r t", new Vector2(36, -20.15));
         markersPositions.put("f p r c", new Vector2(36, 0));
-        markersPositions.put("f p r b", new Vector2(36, -20.15));
+        markersPositions.put("f p r b", new Vector2(36, 20.15));
 
         markersPositions.put("f c", new Vector2(0, 0));
 

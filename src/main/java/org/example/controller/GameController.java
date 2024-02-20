@@ -17,17 +17,17 @@ public class GameController
 
         Vector2 secondPlayerPosition = new Vector2();
 
-        System.out.println("Enter first player position: ");
+        System.out.println("Enter first player relative position: ");
 //        firstPlayerPosition.setX(SCANNER.nextDouble());
-        firstPlayerPosition.setX(-20);
+        firstPlayerPosition.setX(-30);
 //        firstPlayerPosition.setY(SCANNER.nextDouble());
-        firstPlayerPosition.setY(10);
+        firstPlayerPosition.setY(-16);
 
-        System.out.println("Enter second player position: ");
+        System.out.println("Enter second player relative position: ");
 //        secondPlayerPosition.setX(SCANNER.nextDouble());
         secondPlayerPosition.setX(-20);
 //        secondPlayerPosition.setY(SCANNER.nextDouble());
-        secondPlayerPosition.setY(10);
+        secondPlayerPosition.setY(-16);
 
         System.out.println("Enter rotation speed (in degrees between -180 and 180): ");
 //        turnMoment = SCANNER.nextDouble();

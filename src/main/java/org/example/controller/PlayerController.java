@@ -322,7 +322,7 @@ public class PlayerController implements Runnable {
     }
 
     private boolean confirmDistance(Vector2 calcPosition, Vector2 objPos, double expectedDist) {
-        double distError = 3;
+        double distError = 10;
 
         return Math.abs(calcPosition.getDistance(objPos) - expectedDist) <= distError;
     }
@@ -363,10 +363,6 @@ public class PlayerController implements Runnable {
 
         Marker playerAsMarker = new Marker("player", playerPosition);
         playerAsMarker.setDistance(object.getDistance());
-
-        if (knowledge.getTeamSide() == Side.LEFT) {
-            int pop = 0;
-        }
 
         return calcPositionBy2MarkersAndOne(marker1FromObjectPerspective, playerAsMarker, marker2FromObjectPerspective);
     }
