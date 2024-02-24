@@ -6,13 +6,16 @@ import org.example.exception.FailedToCalculateException;
 import org.example.model.Knowledge;
 import org.example.model.base.GameObject;
 import org.example.model.object.Marker;
+import org.example.model.unit.PlayModeType;
 import org.example.model.unit.Side;
 import org.example.model.unit.Vector2;
+import org.example.planner.Planner;
 import org.example.receiver.PerceptionFormer;
 import org.example.receiver.Receiver;
 import org.example.model.Perception;
 import org.example.model.object.Player;
 import org.example.sender.Sender;
+import org.example.sender.action.Action;
 
 import java.net.DatagramSocket;
 import java.net.SocketException;
@@ -27,6 +30,7 @@ public class PlayerController implements Runnable {
 
     private final Knowledge knowledge;
     private PerceptionFormer perceptionFormer;
+    private final Planner planner;
 
     private Receiver receiver;
     private Sender sender;
@@ -38,8 +42,9 @@ public class PlayerController implements Runnable {
     private boolean isInitialized = false;
 
     public PlayerController(String teamName, boolean isGoalie, Vector2 startPos) {
-        knowledge = new Knowledge(teamName, isGoalie);
+        knowledge = new Knowledge(teamName, isGoalie, startPos);
         this.startPos = startPos;
+        planner = new Planner(knowledge);
     }
 
     @Override
@@ -53,6 +58,7 @@ public class PlayerController implements Runnable {
 
                 try {
                     sender.sendInit(knowledge.getTeamName(), "7", knowledge.isGoalie());
+                    sender.sendSyncSee(); // Will sync all messages to cycle time by rounding up!!!
                     while (!future.isDone()) {
                         if (knowledge.isServerReady()) {
                             if (!isInitialized) {
@@ -86,12 +92,25 @@ public class PlayerController implements Runnable {
 
     // Main function!
     private void executeActions() {
-        calcPosition();
-        sender.sendTurn(turnMoment);
+        Perception perception = perceptionFormer.getLastPerception();
+
+        if (perception == null) {
+            log.debug("No enough data for position calculation...");
+            return;
+        }
+
+        // Don't act until game started
+        if (perception.getCycleNumber() == 0) {
+            return;
+        }
+
+//        calcPosition(perception);
+
+        Action action = planner.planAction(perception);
+        sender.sendCommand(action);
     }
 
-    private void calcPosition() {
-        Perception perception = perceptionFormer.getLastPerception();
+    private void calcPosition(Perception perception) {
 
         if (perception == null) {
             log.debug("No enough data for position calculation...");

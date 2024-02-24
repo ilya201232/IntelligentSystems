@@ -1,6 +1,7 @@
 package org.example.model.unit;
 
 import lombok.extern.slf4j.Slf4j;
+import org.example.exception.FailedToParseException;
 
 @Slf4j
 public enum Side {
@@ -21,6 +22,16 @@ public enum Side {
             default -> {
                 log.warn("Failed to parse {} for Side", string);
                 yield null;
+            }
+        };
+    }
+
+    public static Side parseStringPossibleException(String string) {
+        return switch (string) {
+            case "l" -> LEFT;
+            case "r" -> RIGHT;
+            default -> {
+                throw new FailedToParseException();
             }
         };
     }

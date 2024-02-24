@@ -5,6 +5,7 @@ import org.example.model.Knowledge;
 import org.example.model.unit.Vector2;
 import org.example.receiver.dto.enums.ViewQuality;
 import org.example.receiver.dto.enums.ViewWidth;
+import org.example.sender.action.*;
 import org.example.sender.dto.Foul;
 
 import java.io.IOException;
@@ -12,6 +13,8 @@ import java.net.*;
 
 @Slf4j
 public class Sender {
+
+    private static final int WAIT_TIME_MS = 150;
 
     private final DatagramSocket socket;
     private final InetAddress address;
@@ -63,10 +66,10 @@ public class Sender {
         sendCommand("(kick " + power + " " + direction + ")");
     }
 
-    public void sendTackle(double tacklePower, Foul foul) {
+    public void sendTackle(double power, Foul foul) {
         StringBuilder builder = new StringBuilder();
 
-        builder.append("(tackle ").append(tacklePower);
+        builder.append("(tackle ").append(power);
         if (foul != null) {
             builder.append(" ").append(foul);
         }
@@ -122,6 +125,90 @@ public class Sender {
     // TODO: create dto in receiver!
     public void sendScore() {
         sendCommand("(score)");
+    }
+
+    public void sendSyncSee() {
+        sendCommand("(synch_see)");
+    }
+
+    public void sendCommand(Action action) {
+        switch (action.getType()) {
+            case TURN -> {
+                TurnAction turnAction = (TurnAction) action;
+                sendTurn(turnAction.getMoment());
+                /*try {
+                    log.debug("Sleeping for {} ms to wait for new data resulting from this action.", WAIT_TIME_MS);
+                    Thread.sleep(WAIT_TIME_MS);
+                } catch (InterruptedException e) {
+                    log.error("Sleep operation was interrupted", e);
+                }*/
+            }
+            case DASH -> {
+                DashAction dashAction = (DashAction) action;
+                sendDash(dashAction.getPower(), dashAction.getDirection());
+                /*try {
+                    log.debug("Sleeping for {} ms to wait for new data resulting from this action.", WAIT_TIME_MS);
+                    Thread.sleep(WAIT_TIME_MS);
+                } catch (InterruptedException e) {
+                    log.error("Sleep operation was interrupted", e);
+                }*/
+            }
+            case KICK -> {
+                KickAction kickAction = (KickAction) action;
+                sendKick(kickAction.getPower(), kickAction.getDirection());
+                /*try {
+                    log.debug("Sleeping for {} ms to wait for new data resulting from this action.", WAIT_TIME_MS);
+                    Thread.sleep(WAIT_TIME_MS);
+                } catch (InterruptedException e) {
+                    log.error("Sleep operation was interrupted", e);
+                }*/
+            }
+            case TACKLE -> {
+                TackleAction tackleAction = (TackleAction) action;
+                sendTackle(tackleAction.getPower(), tackleAction.getFoul());
+                /*try {
+                    log.debug("Sleeping for {} ms to wait for new data resulting from this action.", WAIT_TIME_MS);
+                    Thread.sleep(WAIT_TIME_MS);
+                } catch (InterruptedException e) {
+                    log.error("Sleep operation was interrupted", e);
+                }*/
+            }
+            case CATCH -> {
+                CatchAction catchAction = (CatchAction) action;
+                sendCatch(catchAction.getDirection());
+                /*try {
+                    log.debug("Sleeping for {} ms to wait for new data resulting from this action.", WAIT_TIME_MS);
+                    Thread.sleep(WAIT_TIME_MS);
+                } catch (InterruptedException e) {
+                    log.error("Sleep operation was interrupted", e);
+                }*/
+            }
+            case MOVE -> {
+                MoveAction moveAction = (MoveAction) action;
+                sendMove(moveAction.getPosition());
+            }
+            case CHANGE_VIEW -> {
+                ChangeViewAction changeViewAction = (ChangeViewAction) action;
+                sendChangeView(changeViewAction.getWidth(), changeViewAction.getQuality());
+            }
+            case SAY -> {
+                SayAction sayAction = (SayAction) action;
+                sendSay(sayAction.getMessage());
+            }
+            case POINT_TO -> {
+                PointToAction pointToAction = (PointToAction) action;
+                sendPointTo(pointToAction.getDistance(), pointToAction.getDirection());
+            }
+            case NONE -> {
+                /*try {
+                    log.debug("Sleeping for {} ms to wait for new data (empty action).", WAIT_TIME_MS);
+                    Thread.sleep(WAIT_TIME_MS);
+                } catch (InterruptedException e) {
+                    log.error("Sleep operation was interrupted", e);
+                }*/
+            }
+        }
+
     }
 
     private void sendCommand(String command) {

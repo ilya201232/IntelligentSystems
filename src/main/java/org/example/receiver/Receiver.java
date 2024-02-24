@@ -1,6 +1,7 @@
 package org.example.receiver;
 
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.example.model.Knowledge;
 import org.example.model.unit.PlayMode;

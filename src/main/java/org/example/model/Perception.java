@@ -11,12 +11,19 @@ import org.example.model.object.Player;
 import org.example.receiver.dto.HearDTO;
 import org.example.receiver.dto.SenseBodyDTO;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
 public class Perception {
+
+    private boolean hasGotSenseBodyInfo;
+    private boolean hasGotSeeInfo;
+    private boolean hasGotHearInfo;
+
+    private LocalDateTime creationDatetime;
 
     private int cycleNumber;
 
@@ -36,12 +43,17 @@ public class Perception {
     private SenseBodyDTO sensed;
 
     public Perception(int cycleNumber) {
+        hasGotSenseBodyInfo = false;
+        hasGotSeeInfo = false;
+        hasGotHearInfo = false;
+
         this.cycleNumber = cycleNumber;
         markersSaw = new ArrayList<>();
 //        linesSaw = new ArrayList<>();
         teammatesSaw = new ArrayList<>();
         opponentsSaw = new ArrayList<>();
         unknownPlayersSaw = new ArrayList<>();
+        creationDatetime = LocalDateTime.now();
     }
 
 //    public void addLine(Line line) {

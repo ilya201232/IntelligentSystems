@@ -3,15 +3,11 @@ package org.example.model;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.model.object.Player;
-import org.example.model.unit.PlayMode;
-import org.example.model.unit.Side;
-import org.example.model.unit.Vector2;
+import org.example.model.unit.*;
 import org.example.receiver.dto.PlayerTypeDTO;
+import org.example.sender.action.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Getter
 public class Knowledge {
@@ -40,6 +36,7 @@ public class Knowledge {
     private final boolean isGoalie;
 
     private final Player thisPlayer;
+    private final Vector2 startPosition;
 
     private Side teamSide;
     private final String teamName;
@@ -48,11 +45,13 @@ public class Knowledge {
 
     @Setter
     private PlayMode currentPlayMode;
+    @Setter
+    private Map<EventType, Event> eventsByCycleNumber; // In case hear message is event said by referee
 
     @Setter
     private Integer port;
 
-    public Knowledge(String teamName, boolean isGoalie) {
+    public Knowledge(String teamName, boolean isGoalie, Vector2 startPosition) {
 
         serverParams = new ArrayList<>();
         playerParams = new ArrayList<>();
@@ -62,6 +61,10 @@ public class Knowledge {
         this.isGoalie = isGoalie;
 
         thisPlayer = new Player(teamName, isGoalie);
+        thisPlayer.setBodyDirection(0d); // Facing right
+        this.startPosition = startPosition;
+
+        eventsByCycleNumber = new HashMap<>();
 
 //        lines = new HashMap<>();
 //

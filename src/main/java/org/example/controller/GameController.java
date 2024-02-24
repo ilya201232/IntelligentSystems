@@ -11,6 +11,7 @@ public class GameController
 
     private static final Scanner SCANNER = new Scanner(System.in);
 
+    /*@Deprecated
     public void runLab1() {
         Vector2 firstPlayerPosition = new Vector2();
         double turnMoment;
@@ -42,6 +43,16 @@ public class GameController
         try (ExecutorService executorService = Executors.newFixedThreadPool(2)) {
             executorService.execute(firstPlayer);
             executorService.submit(secondPlayer);
+        }
+    }*/
+
+    public void runLab2() {
+        // Always left team
+        Vector2 playerPosition = new Vector2(-10, -20);
+
+        PlayerController playerController = new PlayerController("Only_team", false, playerPosition);
+        try (ExecutorService executorService = Executors.newSingleThreadExecutor()){
+            executorService.execute(playerController);
         }
     }
 }

@@ -1,19 +1,24 @@
 package org.example.receiver;
 
 import lombok.extern.slf4j.Slf4j;
+import org.example.exception.FailedToParseException;
 import org.example.model.Knowledge;
 import org.example.model.Perception;
 import org.example.model.object.Ball;
 import org.example.model.object.Marker;
 import org.example.model.object.Player;
+import org.example.model.unit.Event;
+import org.example.model.unit.PlayMode;
 import org.example.model.unit.Side;
 import org.example.receiver.dto.*;
 import org.example.receiver.dto.enums.MessageType;
+import org.example.receiver.dto.enums.SenderType;
 import org.example.receiver.dto.object.ObjectInfo;
 
 import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.SocketTimeoutException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -26,6 +31,7 @@ public class PerceptionFormer implements Runnable {
 
     private Receiver receiver;
     private Perception formingPerception;
+//    private int lastCreatedCycle = -1;
     private final LinkedBlockingDeque<Perception> perceptionLinkedBlockingDeque;
 
     private final int initMessageCount = 3;
@@ -34,7 +40,7 @@ public class PerceptionFormer implements Runnable {
     public PerceptionFormer(Knowledge knowledge, DatagramSocket socket) {
         this.knowledge = knowledge;
         this.receiver = new Receiver(socket, knowledge);
-        perceptionLinkedBlockingDeque = new LinkedBlockingDeque<>(5);
+        perceptionLinkedBlockingDeque = new LinkedBlockingDeque<>(1);
     }
 
     @Override
@@ -115,8 +121,22 @@ public class PerceptionFormer implements Runnable {
         }
 
         switch (dto.getMessageType()) {
-            case SENSE_BODY -> formingPerception.setSensed((SenseBodyDTO) dto);
+            case SENSE_BODY -> {
+                if (formingPerception.isHasGotSenseBodyInfo()) {
+                    addPerception(formingPerception);
+                    formingPerception = new Perception(dto.getCycleNumber());
+                } else {
+                    formingPerception.setHasGotSenseBodyInfo(true);
+                }
+                formingPerception.setSensed((SenseBodyDTO) dto);
+            }
             case SEE -> {
+                if (formingPerception.isHasGotSeeInfo()) {
+                    addPerception(formingPerception);
+                    formingPerception = new Perception(dto.getCycleNumber());
+                } else {
+                    formingPerception.setHasGotSeeInfo(true);
+                }
 
                 SeeDTO seeDTO = (SeeDTO) dto;
 
@@ -207,7 +227,31 @@ public class PerceptionFormer implements Runnable {
 
                 formingPerception.setMarkersSaw(markers);
             }
-            case HEAR -> formingPerception.setHeardMessage((HearDTO) dto);
+
+            // Hear message can not be anticipated, unlike sense body (100ms) and see (200ms/150ms)
+            // TODO: If not used for iter-player communication, then can be used only for capturing game states and events
+            case HEAR -> {
+                if (formingPerception.isHasGotHearInfo()) {
+                    addPerception(formingPerception);
+                    formingPerception = new Perception(dto.getCycleNumber());
+                } else {
+                    formingPerception.setHasGotHearInfo(true);
+                }
+
+                HearDTO hearDTO = (HearDTO) dto;
+
+                if (hearDTO.getSenderType() == SenderType.REFEREE) {
+                    try {
+                        knowledge.setCurrentPlayMode(PlayMode.parsePlayMode(hearDTO.getMessage()));
+                    } catch (FailedToParseException exception) {
+                        Event event = Event.parseEvent(hearDTO.getMessage());
+                        event.setCycleNumber(formingPerception.getCycleNumber());
+                        knowledge.getEventsByCycleNumber().put(event.getType(), event);
+                    }
+                }
+
+                formingPerception.setHeardMessage(hearDTO);
+            }
         }
 
     }
@@ -222,7 +266,7 @@ public class PerceptionFormer implements Runnable {
     }
 
     public Perception getLastPerception() {
-
+        // TODO: when it is time to store more then one perception - change to peek and remove some logging
         try {
             return perceptionLinkedBlockingDeque.pollLast(600, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
