@@ -38,6 +38,7 @@ public class Knowledge {
     private final Player thisPlayer;
     private final Vector2 startPosition;
 
+    private final int teammatesAmount;
     private Side teamSide;
     private final String teamName;
     @Setter
@@ -51,7 +52,7 @@ public class Knowledge {
     @Setter
     private Integer port;
 
-    public Knowledge(String teamName, boolean isGoalie, Vector2 startPosition) {
+    public Knowledge(String teamName, boolean isGoalie, Vector2 startPosition, int teammatesAmount) {
 
         serverParams = new ArrayList<>();
         playerParams = new ArrayList<>();
@@ -59,6 +60,8 @@ public class Knowledge {
 
         this.teamName = teamName;
         this.isGoalie = isGoalie;
+
+        this.teammatesAmount = teammatesAmount;
 
         thisPlayer = new Player(teamName, isGoalie);
         thisPlayer.setBodyDirection(0d); // Facing right

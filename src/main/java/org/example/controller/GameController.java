@@ -2,6 +2,7 @@ package org.example.controller;
 
 import org.example.model.unit.Vector2;
 
+import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -46,6 +47,7 @@ public class GameController
         }
     }*/
 
+    /*@Deprecated
     public void runLab2() {
         // Always left team
         Vector2 playerPosition = new Vector2(-10, -20);
@@ -53,6 +55,32 @@ public class GameController
         PlayerController playerController = new PlayerController("Only_team", false, playerPosition);
         try (ExecutorService executorService = Executors.newSingleThreadExecutor()){
             executorService.execute(playerController);
+        }
+    }*/
+
+    public void runLab3() {
+        int teamMatesAmountFirst = 3;
+        List<PlayerController> firstTeam = List.of(
+                new PlayerController("First_team", false, new Vector2(-10, 0), teamMatesAmountFirst),
+                new PlayerController("First_team", false, new Vector2(-10, -20), teamMatesAmountFirst),
+                new PlayerController("First_team", false, new Vector2(-15, -20), teamMatesAmountFirst)
+        );
+
+        int teamMatesAmountSecond = 1;
+        List<PlayerController> secondTeam = List.of(
+                // TODO: get position for goalie
+                new PlayerController("Second_team", true, new Vector2(-50, 0), teamMatesAmountSecond)
+
+        );
+
+
+        try (ExecutorService executorService = Executors.newFixedThreadPool(firstTeam.size() + secondTeam.size())) {
+            for (PlayerController playerController : firstTeam) {
+                executorService.submit(playerController);
+            }
+            for (PlayerController playerController : secondTeam) {
+                executorService.submit(playerController);
+            }
         }
     }
 }

@@ -12,6 +12,6 @@ import lombok.Setter;
 public abstract class GameObject {
 
     protected Double distance;
-    protected Double direction;
+    protected double direction;
 
 }

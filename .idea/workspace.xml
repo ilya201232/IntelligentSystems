@@ -10,13 +10,15 @@
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/controller/GameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/GameController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/controller/PlayerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/PlayerController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/model/Knowledge.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/model/Knowledge.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/model/Perception.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/model/Perception.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/model/unit/PlayMode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/model/unit/PlayMode.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/model/unit/Side.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/model/unit/Side.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/model/base/GameObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/model/base/GameObject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/model/unit/Vector2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/model/unit/Vector2.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/planner/Planner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/decision/planner/Planner.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/planner/PositionCalculator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/decision/planner/PositionCalculator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/planner/step/ApproachFlagStep.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/decision/planner/step/ApproachFlagStep.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/planner/step/KickBallForGoalStep.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/decision/planner/step/KickBallForGoalStep.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/planner/step/Step.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/decision/planner/step/Step.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/planner/step/StepType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/decision/planner/step/StepType.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/receiver/PerceptionFormer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/receiver/PerceptionFormer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/receiver/Receiver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/receiver/Receiver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/receiver/dto/HearDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/receiver/dto/HearDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/sender/Sender.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/sender/Sender.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/log4j2.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/log4j2.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -28,6 +30,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Enum" />
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
@@ -47,6 +50,8 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;Attach to process.pid 7456.executor&quot;: &quot;ProcessAttachDebug&quot;,
+    &quot;Java Scratch.Scratch.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
@@ -57,7 +62,14 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
+      &quot;JAVA&quot;,
+      &quot;PLAIN_TEXT&quot;
+    ]
   }
 }</component>
   <component name="RecentsManager">
@@ -68,7 +80,7 @@
       <recent name="org.example.model.unit" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Application.Main">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="org.example.Main" />
       <module name="IntelligentSystems" />
@@ -82,9 +94,18 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Scratch" type="Java Scratch" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Scratch" />
+      <module name="IntelligentSystems" />
+      <option name="SCRATCH_FILE_URL" value="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.java" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Application.Main" />
+        <item itemvalue="Java Scratch.Scratch" />
       </list>
     </recent_temporary>
   </component>
@@ -121,11 +142,37 @@
       <workItem from="1708539949179" duration="448000" />
       <workItem from="1708583164965" duration="8149000" />
       <workItem from="1708722511077" duration="800000" />
-      <workItem from="1708756970334" duration="17225000" />
+      <workItem from="1708756970334" duration="21176000" />
+      <workItem from="1708944423552" duration="1109000" />
+      <workItem from="1709235035488" duration="590000" />
+      <workItem from="1709300743350" duration="665000" />
+      <workItem from="1709313393138" duration="3190000" />
+      <workItem from="1709364347451" duration="18243000" />
+      <workItem from="1709450573186" duration="24171000" />
+      <workItem from="1709530295692" duration="5021000" />
+      <workItem from="1709537295762" duration="585000" />
+      <workItem from="1709537893054" duration="4963000" />
+      <workItem from="1709902978628" duration="598000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/example/decision/tree/impl/RegularPlayerActionTree.java</url>
+          <line>277</line>
+          <option name="timeStamp" value="24" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/example/decision/tree/impl/GoaliePlayerActionTree.java</url>
+          <line>355</line>
+          <option name="timeStamp" value="31" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

@@ -1,4 +1,4 @@
-package org.example.planner;
+package org.example.decision.planner;
 
 public class PositionCalculator {
     // TODO: move position calculation here. Perception must be passed here, do not get it directly from PerceptionFormer!

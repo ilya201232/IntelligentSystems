@@ -1,4 +1,4 @@
-package org.example.planner.step;
+package org.example.decision.planner.step;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -12,34 +12,32 @@ import org.example.model.unit.Side;
 import org.example.model.unit.Vector2;
 import org.example.sender.action.*;
 
-import java.util.Map;
 import java.util.Optional;
 
 @Getter
 @Slf4j
 public class KickBallForGoalStep extends Step {
 
-    private static final double KICK_DISTANCE_EPS = 0.5;
+    private static final double KICK_DISTANCE_EPS = 1;
     private static final double ANGLE_EPS_RAD = Math.toRadians(20);
     private static final double MIN_SPEED = 1; // speed is usually < 1
 
 
     private static final double TURN_ANGLE_DEG = 30;
-    private static final double DASH_POWER = 100;
+    private static final double DASH_POWER = 50;
     private static final double KICK_POWER = 100;
 
     private static final double KICK_POWER_SMALL = 10;
     private static final double KICK_DIRECTION_SMALL_DEG = 45;
 
-    private final Side goalSide;
+    private Side goalSide;
     private Vector2 markerPosition = null;
 
     // State
     private int stepStartCycleNumber = -1;
 
-    public KickBallForGoalStep(Side goalSide) {
+    public KickBallForGoalStep() {
         super(StepType.KICK_BALL_FOR_GOAL);
-        this.goalSide = goalSide;
     }
 
     @Override
@@ -47,6 +45,14 @@ public class KickBallForGoalStep extends Step {
         // Initialising marker position
         if (markerPosition == null) {
             markerPosition = knowledge.getMarkersPositions().get("g " + (goalSide == Side.LEFT ? "l" : "r"));
+        }
+
+        if (goalSide == null) {
+            if (knowledge.getTeamSide() == null) {
+                throw new IllegalStateException("Don't know player team to start planning");
+            } else {
+                goalSide = Side.getOpposite(knowledge.getTeamSide());
+            }
         }
 
         if (stepStartCycleNumber == -1) {

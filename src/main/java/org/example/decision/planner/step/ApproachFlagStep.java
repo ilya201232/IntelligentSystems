@@ -1,4 +1,4 @@
-package org.example.planner.step;
+package org.example.decision.planner.step;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +25,7 @@ public class ApproachFlagStep extends Step {
 
 
     private static final double TURN_ANGLE_DEG = 30;
-    private static final double DASH_POWER = 100;
+    private static final double DASH_POWER = 50;
 
     private final String markerName;
     private Vector2 markerPosition = null;

@@ -156,7 +156,7 @@ public class PerceptionFormer implements Runnable {
                             String[] nameParts = objectInfo.getObjectName().split(" ");
 
                             if (nameParts.length >= 2) {
-                                if (nameParts[1].equals(knowledge.getTeamName())) {
+                                if (nameParts[1].substring(1, nameParts[1].length() - 1).equals(knowledge.getTeamName())) {
                                     player.setSide(knowledge.getTeamSide());
                                 } else {
                                     player.setSide(Side.getOpposite(knowledge.getTeamSide()));

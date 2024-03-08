@@ -1,4 +1,4 @@
-package org.example.planner.step;
+package org.example.decision.planner.step;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
