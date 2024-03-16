@@ -21,14 +21,14 @@ public class Perception {
 
     private boolean hasGotSenseBodyInfo;
     private boolean hasGotSeeInfo;
-    private boolean hasGotHearInfo;
+//    private boolean hasGotHearInfo;
 
     private LocalDateTime creationDatetime;
 
     private int cycleNumber;
 
     // From hear message
-    private HearDTO heardMessage;
+//    private HearDTO heardMessage;
 
     // From see message
     private List<Marker> markersSaw;
@@ -45,7 +45,7 @@ public class Perception {
     public Perception(int cycleNumber) {
         hasGotSenseBodyInfo = false;
         hasGotSeeInfo = false;
-        hasGotHearInfo = false;
+//        hasGotHearInfo = false;
 
         this.cycleNumber = cycleNumber;
         markersSaw = new ArrayList<>();

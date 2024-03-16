@@ -18,7 +18,6 @@ import org.example.receiver.dto.object.ObjectInfo;
 import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.SocketTimeoutException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -125,18 +124,19 @@ public class PerceptionFormer implements Runnable {
                 if (formingPerception.isHasGotSenseBodyInfo()) {
                     addPerception(formingPerception);
                     formingPerception = new Perception(dto.getCycleNumber());
-                } else {
-                    formingPerception.setHasGotSenseBodyInfo(true);
                 }
+
+                formingPerception.setHasGotSenseBodyInfo(true);
+
                 formingPerception.setSensed((SenseBodyDTO) dto);
             }
             case SEE -> {
                 if (formingPerception.isHasGotSeeInfo()) {
                     addPerception(formingPerception);
                     formingPerception = new Perception(dto.getCycleNumber());
-                } else {
-                    formingPerception.setHasGotSeeInfo(true);
                 }
+
+                formingPerception.setHasGotSeeInfo(true);
 
                 SeeDTO seeDTO = (SeeDTO) dto;
 
@@ -231,26 +231,32 @@ public class PerceptionFormer implements Runnable {
             // Hear message can not be anticipated, unlike sense body (100ms) and see (200ms/150ms)
             // TODO: If not used for iter-player communication, then can be used only for capturing game states and events
             case HEAR -> {
-                if (formingPerception.isHasGotHearInfo()) {
+                /*if (formingPerception.isHasGotHearInfo()) {
                     addPerception(formingPerception);
                     formingPerception = new Perception(dto.getCycleNumber());
-                } else {
-                    formingPerception.setHasGotHearInfo(true);
                 }
+
+                formingPerception.setHasGotHearInfo(true);*/
 
                 HearDTO hearDTO = (HearDTO) dto;
 
-                if (hearDTO.getSenderType() == SenderType.REFEREE) {
-                    try {
-                        knowledge.setCurrentPlayMode(PlayMode.parsePlayMode(hearDTO.getMessage()));
-                    } catch (FailedToParseException exception) {
-                        Event event = Event.parseEvent(hearDTO.getMessage());
-                        event.setCycleNumber(formingPerception.getCycleNumber());
-                        knowledge.getEventsByCycleNumber().put(event.getType(), event);
+                switch (hearDTO.getSenderType()) {
+                    case REFEREE -> {
+                        try {
+                            knowledge.setCurrentPlayMode(PlayMode.parsePlayMode(hearDTO.getMessage(), hearDTO.getCycleNumber()));
+                        } catch (FailedToParseException exception) {
+                            Event event = Event.parseEvent(hearDTO.getMessage());
+                            event.setCycleNumber(formingPerception.getCycleNumber());
+                            knowledge.getHeardEvents().put(event.getType(), event);
+                        }
+                    }
+                    case DIRECTION -> {
+                        knowledge.getMessages().add(hearDTO);
                     }
                 }
+                
 
-                formingPerception.setHeardMessage(hearDTO);
+//                formingPerception.setHeardMessage(hearDTO);
             }
         }
 

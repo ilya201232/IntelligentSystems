@@ -7,7 +7,9 @@ import org.example.model.Perception;
 import org.example.model.base.GameObject;
 import org.example.model.object.Marker;
 import org.example.model.object.Player;
+import org.example.model.unit.Side;
 import org.example.model.unit.Vector2;
+import org.example.sender.action.TurnAction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +17,36 @@ import java.util.Optional;
 
 @Slf4j
 public class PlayerUtils {
+
+    public static Optional<Double> calcRotationToMarker(String markerName, Perception perception, Knowledge knowledge) {
+
+        return calcRotationToCoordinates(knowledge.getMarkersPositions().get(markerName), perception, knowledge);
+    }
+
+    public static Optional<Double> calcRotationToCoordinates(Vector2 coordinates, Perception perception, Knowledge knowledge) {
+
+        Optional<Vector2> playerPosition = PlayerUtils.calcThisPlayerPosition(perception, knowledge);
+
+        if (playerPosition.isEmpty()) {
+            return Optional.empty();
+        } else {
+            Optional<Marker> anyMarker = perception.getMarkersSaw().stream().findAny();
+
+            if (anyMarker.isEmpty()) {
+                return Optional.empty();
+            }
+
+            double direction = anyMarker.get().getDirection() + Vector2.getAngleBetweenVectors(Vector2.createVector(playerPosition.get(), anyMarker.get().getPosition()), Vector2.createVector(playerPosition.get(), coordinates));
+
+            if (direction > Math.PI) {
+                direction -= 2 * Math.PI;
+            } else if (direction < -Math.PI) {
+                direction += 2 * Math.PI;
+            }
+
+            return Optional.of(direction);
+        }
+    }
 
     public static Optional<Vector2> calcThisPlayerPosition(Perception perception, Knowledge knowledge) {
 
@@ -70,6 +102,10 @@ public class PlayerUtils {
 
         if (!perception.isHasGotSeeInfo() || !perception.isHasGotSenseBodyInfo()) {
             log.debug("No enough data for position calculation...");
+            return Optional.empty();
+        }
+
+        if (object.getDistance() == null) {
             return Optional.empty();
         }
 

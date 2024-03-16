@@ -55,4 +55,11 @@ public class Vector2 {
         );
     }
 
+    public static Vector2 getPositionInMiddle(Vector2 first, Vector2 second) {
+        return new Vector2(
+                (first.x + second.x) / 2,
+                (first.y + second.y) / 2
+        );
+    }
+
 }

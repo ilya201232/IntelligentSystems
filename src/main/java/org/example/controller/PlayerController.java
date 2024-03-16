@@ -4,6 +4,8 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.example.decision.DecisionDelegate;
 import org.example.decision.tree.impl.GoaliePlayerActionTree;
+import org.example.decision.tree.impl.PassPlayerActionTree;
+import org.example.decision.tree.impl.ScorePlayerActionTree;
 import org.example.exception.FailedToCalculateException;
 import org.example.model.Knowledge;
 import org.example.model.base.GameObject;
@@ -43,15 +45,33 @@ public class PlayerController implements Runnable {
     private final Vector2 startPos;
     private boolean isInitialized = false;
 
-    public PlayerController(String teamName, boolean isGoalie, Vector2 startPos, int teammatesAmount) {
+    public PlayerController(String teamName, Vector2 startPos) {
+        knowledge = new Knowledge(teamName, false, startPos, 0);
+        this.startPos = startPos;
+
+        decisionDelegate = new DecisionDelegate(ActionTree.createEmptyActionTree());
+    }
+
+    public PlayerController(String teamName, boolean isGoalie, Vector2 startPos, int teammatesAmount, boolean isPassing) {
         knowledge = new Knowledge(teamName, isGoalie, startPos, teammatesAmount);
         this.startPos = startPos;
 
+        ActionTree actionTree = ActionTree.createEmptyActionTree();
+
         if (isGoalie) {
-            decisionDelegate = new DecisionDelegate(new GoaliePlayerActionTree(knowledge));
+            actionTree = new GoaliePlayerActionTree(knowledge);
         } else {
-            decisionDelegate = new DecisionDelegate(new RegularPlayerActionTree(knowledge));
+
+            if (isPassing) {
+                actionTree = new PassPlayerActionTree(knowledge);
+            } else {
+                actionTree = new ScorePlayerActionTree(knowledge);
+            }
+
+//            actionTree = new RegularPlayerActionTree(knowledge);
         }
+
+        decisionDelegate = new DecisionDelegate(actionTree);
     }
 
     @Override

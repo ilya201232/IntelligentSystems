@@ -9,7 +9,11 @@ public class MoveAction extends Action {
     private final Vector2 position;
 
     public MoveAction(Vector2 position) {
-        super(ActionType.MOVE);
+        this(position, false);
+    }
+
+    public MoveAction(Vector2 position, boolean repeatable) {
+        super(ActionType.MOVE, repeatable);
         this.position = position;
     }
 }

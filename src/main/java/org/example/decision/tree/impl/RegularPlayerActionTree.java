@@ -38,8 +38,6 @@ public class RegularPlayerActionTree extends ActionTree {
     private Double rotationProgress = 0d;
     private Boolean skipRotationFlag = false;
 
-    private final HashMap<String, TreeNode> createdTreeNodes = new HashMap<>();
-
     private Boolean isTurnSeek = true;
     private Integer turnCounter = 0;
 
@@ -55,11 +53,15 @@ public class RegularPlayerActionTree extends ActionTree {
         ));
 
         playerNumbers = new TreeSet<>();
-
-        treeRoot = createTreeRoot();
     }
 
-    private TreeNode createTreeRoot() {
+    @Override
+    public boolean checkMinimumConditionForPassingPerception(Perception perception) {
+        return perception.getSensed() == null || perception.getMarkersSaw().isEmpty();
+    }
+
+    @Override
+    protected TreeNode createTreeRoot() {
         TreeNode stillRotatingTree = createIsStillRotatingActionTree();
         createdTreeNodes.put("stillRotating", stillRotatingTree);
 

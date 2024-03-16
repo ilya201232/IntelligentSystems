@@ -5,6 +5,6 @@ public class EmptyAction extends Action {
     public static EmptyAction instance = new EmptyAction();
 
     private EmptyAction() {
-        super(ActionType.NONE);
+        super(ActionType.NONE, true);
     }
 }

@@ -59,7 +59,7 @@ public class KickBallForGoalStep extends Step {
             stepStartCycleNumber = perception.getCycleNumber();
         }
 
-        Event goalEvent = knowledge.getEventsByCycleNumber().get(EventType.GOAL);
+        Event goalEvent = knowledge.getHeardEvents().get(EventType.GOAL);
 
         if (goalEvent == null) {
             log.debug("GOAL event has not been found. Step is not done.");

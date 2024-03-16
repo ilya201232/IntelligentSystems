@@ -2,6 +2,7 @@ package org.example.model.unit;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -9,10 +10,12 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 public class PlayMode {
 
+    @Setter
+    private int createdAt;
     private PlayModeType playModeType;
     private Side side;
 
-    public static PlayMode parsePlayMode(String playMode) {
+    public static PlayMode parsePlayMode(String playMode, int cycleNumber) {
         String[] split = playMode.split("_");
 
         Side side = null;
@@ -23,6 +26,6 @@ public class PlayMode {
 
         PlayModeType type = PlayModeType.parsePlayModeType(playMode);
 
-        return new PlayMode(type, side);
+        return new PlayMode(cycleNumber, type, side);
     }
 }

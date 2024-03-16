@@ -8,7 +8,11 @@ public class TurnAction extends Action {
     private final double moment;
 
     public TurnAction(double moment) {
-        super(ActionType.TURN);
+        this(moment, false);
+    }
+
+    public TurnAction(double moment, boolean repeatable) {
+        super(ActionType.TURN, repeatable);
         this.moment = moment;
     }
 }

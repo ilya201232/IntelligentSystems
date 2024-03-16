@@ -58,7 +58,7 @@ public class GameController
         }
     }*/
 
-    public void runLab3() {
+    /*public void runLab3() {
         int teamMatesAmountFirst = 3;
         List<PlayerController> firstTeam = List.of(
                 new PlayerController("First_team", false, new Vector2(-10, 0), teamMatesAmountFirst),
@@ -68,11 +68,33 @@ public class GameController
 
         int teamMatesAmountSecond = 1;
         List<PlayerController> secondTeam = List.of(
-                // TODO: get position for goalie
                 new PlayerController("Second_team", true, new Vector2(-50, 0), teamMatesAmountSecond)
-
         );
 
+
+        try (ExecutorService executorService = Executors.newFixedThreadPool(firstTeam.size() + secondTeam.size())) {
+            for (PlayerController playerController : firstTeam) {
+                executorService.submit(playerController);
+            }
+            for (PlayerController playerController : secondTeam) {
+                executorService.submit(playerController);
+            }
+        }
+    }*/
+
+    public void runLab4() {
+        int teamMatesAmountFirst = 2;
+        List<PlayerController> firstTeam = List.of(
+                new PlayerController("First_team", false, new Vector2(-10, 0), teamMatesAmountFirst, true),
+                new PlayerController("First_team", false, new Vector2(-10, -20), teamMatesAmountFirst, false)
+        );
+
+        int teamMatesAmountSecond = 2;
+        List<PlayerController> secondTeam = List.of(
+                // Players with empty logic standing near goal to evade free_kick event
+                new PlayerController("Second_team", new Vector2(-50, -10)),
+                new PlayerController("Second_team", new Vector2(-50, 10))
+        );
 
         try (ExecutorService executorService = Executors.newFixedThreadPool(firstTeam.size() + secondTeam.size())) {
             for (PlayerController playerController : firstTeam) {

@@ -2,6 +2,7 @@ package org.example.decision.tree.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.decision.tree.ActionTree;
+import org.example.decision.tree.TimedActionTree;
 import org.example.decision.tree.TreeNode;
 import org.example.model.Knowledge;
 import org.example.model.Perception;
@@ -18,7 +19,7 @@ import org.example.utils.PlayerUtils;
 import java.util.*;
 
 @Slf4j
-public class GoaliePlayerActionTree extends ActionTree {
+public class GoaliePlayerTimedActionTree extends TimedActionTree {
 
     private final static double SEEK_TURN_STEP = 50;
     private final static double ABS_DELTA_OPPOSITE_MARKER_DIRECTION_RAD = Math.toRadians(20);
@@ -54,10 +55,11 @@ public class GoaliePlayerActionTree extends ActionTree {
     private Integer catchingProgress = -1;
     private int lastSentCatch;
 
-    private final Random random = new Random();
 
-    public GoaliePlayerActionTree(Knowledge knowledgeGlobal) {
+    public GoaliePlayerTimedActionTree(Knowledge knowledgeGlobal) {
         super(knowledgeGlobal);
+
+
     }
 
     @Override

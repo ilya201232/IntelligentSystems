@@ -11,7 +11,11 @@ public class ChangeViewAction extends Action {
     private final ViewQuality quality;
 
     public ChangeViewAction(ViewWidth width, ViewQuality quality) {
-        super(ActionType.CHANGE_VIEW);
+        this(width, quality, false);
+    }
+
+    public ChangeViewAction(ViewWidth width, ViewQuality quality, boolean repeatable) {
+        super(ActionType.CHANGE_VIEW, repeatable);
         this.width = width;
         this.quality = quality;
     }

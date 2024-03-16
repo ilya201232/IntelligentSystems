@@ -9,7 +9,11 @@ public class PointToAction extends Action {
     private final double direction;
 
     public PointToAction(double distance, double direction) {
-        super(ActionType.POINT_TO);
+        this(distance, direction, false);
+    }
+
+    public PointToAction(double distance, double direction, boolean repeatable) {
+        super(ActionType.POINT_TO, repeatable);
         this.distance = distance;
         this.direction = direction;
     }

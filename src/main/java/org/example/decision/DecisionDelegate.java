@@ -18,10 +18,17 @@ public class DecisionDelegate {
     private final ActionTree actionTree;
     private LocalDateTime lastUsedPerceptionMoment = LocalDateTime.MIN;
 
+    private Action lastAction = EmptyAction.instance;
+
     public Action planAction(Perception perception) {
 
-        if (perception.getSensed() == null || perception.getMarkersSaw().isEmpty()) {
+        if (actionTree.checkMinimumConditionForPassingPerception(perception)) {
             log.debug("Received perception doesn't have all information needed for action planning.");
+
+            if (lastAction.isRepeatable()) {
+                return lastAction;
+            }
+
             return EmptyAction.instance;
         }
 
@@ -32,11 +39,18 @@ public class DecisionDelegate {
                 lastUsedPerceptionMoment = LocalDateTime.now();
             } else {
                 log.debug("Received perception that was created before last action.");
+
+                if (lastAction.isRepeatable()) {
+                    return lastAction;
+                }
+
                 return EmptyAction.instance;
             }
         }
 
-        return actionTree.decideAction(perception);
+        lastAction = actionTree.decideAction(perception);
+
+        return lastAction;
     }
 
 }

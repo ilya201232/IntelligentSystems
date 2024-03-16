@@ -7,4 +7,5 @@ import lombok.Getter;
 @AllArgsConstructor
 public abstract class Action {
     private final ActionType type;
+    private final boolean repeatable;
 }

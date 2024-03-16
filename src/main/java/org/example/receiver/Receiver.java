@@ -55,7 +55,7 @@ public class Receiver {
         String messageName = message.substring(1, message.lastIndexOf(")")).split(" ")[0];
         String messageContent = message.substring(1 + messageName.length() + 1, message.lastIndexOf(")"));
 
-        return switch (messageName) {
+        MessageDTO messageDTO = switch (messageName) {
             case "init" -> parseInit(messageContent);
             case "server_param" -> parseServerParam(messageContent);
             case "player_param" -> parsePlayerParam(messageContent);
@@ -69,6 +69,12 @@ public class Receiver {
             }
         };
 
+        if (knowledge.getCurrentPlayMode() != null && knowledge.getCurrentPlayMode().getCreatedAt() == -1) {
+            knowledge.getCurrentPlayMode().setCreatedAt(messageDTO.getCycleNumber());
+        }
+
+        return messageDTO;
+
     }
 
     private InitDTO parseInit(String messageContent) {
@@ -79,7 +85,7 @@ public class Receiver {
         return InitDTO.builder()
                 .side(Side.parseString(messageParts[0]))
                 .uniformNumber(Integer.parseInt(messageParts[1]))
-                .playMode(PlayMode.parsePlayMode(messageParts[2]))
+                .playMode(PlayMode.parsePlayMode(messageParts[2], -1))
                 .build();
     }
 
@@ -350,12 +356,13 @@ public class Receiver {
         String message = messageParts[2];
 
         if (message.charAt(0) == '"') {
-            message = message.substring(1, message.lastIndexOf(""));
+            message = message.substring(1, message.lastIndexOf('"'));
         }
 
         return HearDTO.builder()
                 .cycleNumber(Integer.parseInt(messageParts[0]))
                 .senderType((direction != null) ? SenderType.DIRECTION : SenderType.parseString(messageParts[1]))
+                .senderDirection(direction)
                 .message(message)
                 .build();
     }

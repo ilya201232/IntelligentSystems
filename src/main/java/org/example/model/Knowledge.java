@@ -4,10 +4,14 @@ import lombok.Getter;
 import lombok.Setter;
 import org.example.model.object.Player;
 import org.example.model.unit.*;
+import org.example.receiver.dto.HearDTO;
 import org.example.receiver.dto.PlayerTypeDTO;
-import org.example.sender.action.*;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ConcurrentMap;
 
 @Getter
 public class Knowledge {
@@ -45,9 +49,11 @@ public class Knowledge {
     private String oppositeTeamName;
 
     @Setter
-    private PlayMode currentPlayMode;
+    private volatile PlayMode currentPlayMode;
     @Setter
-    private Map<EventType, Event> eventsByCycleNumber; // In case hear message is event said by referee
+    private ConcurrentMap<EventType, Event> heardEvents; // In case hear message is event said by referee
+    @Setter
+    private Deque<HearDTO> messages; // In case hear message is event said by someone...
 
     @Setter
     private Integer port;
@@ -67,7 +73,8 @@ public class Knowledge {
         thisPlayer.setBodyDirection(0d); // Facing right
         this.startPosition = startPosition;
 
-        eventsByCycleNumber = new HashMap<>();
+        heardEvents = new ConcurrentHashMap<>();
+        messages = new ConcurrentLinkedDeque<>();
 
 //        lines = new HashMap<>();
 //

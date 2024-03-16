@@ -9,17 +9,29 @@
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/controller/GameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/GameController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/controller/PlayerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/PlayerController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/decision/DecisionDelegate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/decision/DecisionDelegate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/decision/planner/step/KickBallForGoalStep.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/decision/planner/step/KickBallForGoalStep.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/decision/tree/ActionTree.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/decision/tree/ActionTree.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/decision/tree/impl/GoaliePlayerActionTree.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/decision/tree/impl/GoaliePlayerActionTree.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/decision/tree/impl/RegularPlayerActionTree.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/decision/tree/impl/RegularPlayerActionTree.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/model/Knowledge.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/model/Knowledge.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/model/base/GameObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/model/base/GameObject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/model/Perception.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/model/Perception.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/model/unit/PlayMode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/model/unit/PlayMode.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/model/unit/Vector2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/model/unit/Vector2.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/planner/Planner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/decision/planner/Planner.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/planner/PositionCalculator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/decision/planner/PositionCalculator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/planner/step/ApproachFlagStep.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/decision/planner/step/ApproachFlagStep.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/planner/step/KickBallForGoalStep.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/decision/planner/step/KickBallForGoalStep.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/planner/step/Step.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/decision/planner/step/Step.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/planner/step/StepType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/decision/planner/step/StepType.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/receiver/PerceptionFormer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/receiver/PerceptionFormer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/log4j2.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/log4j2.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/receiver/Receiver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/receiver/Receiver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/sender/action/Action.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/sender/action/Action.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/sender/action/CatchAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/sender/action/CatchAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/sender/action/ChangeViewAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/sender/action/ChangeViewAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/sender/action/DashAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/sender/action/DashAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/sender/action/EmptyAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/sender/action/EmptyAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/sender/action/KickAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/sender/action/KickAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/sender/action/MoveAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/sender/action/MoveAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/sender/action/PointToAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/sender/action/PointToAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/sender/action/SayAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/sender/action/SayAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/sender/action/TackleAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/sender/action/TackleAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/sender/action/TurnAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/sender/action/TurnAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/utils/PlayerUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/utils/PlayerUtils.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,8 +41,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Enum" />
         <option value="Interface" />
+        <option value="Enum" />
         <option value="Class" />
       </list>
     </option>
@@ -152,7 +164,15 @@
       <workItem from="1709530295692" duration="5021000" />
       <workItem from="1709537295762" duration="585000" />
       <workItem from="1709537893054" duration="4963000" />
-      <workItem from="1709902978628" duration="598000" />
+      <workItem from="1709902978628" duration="9068000" />
+      <workItem from="1709970445944" duration="8116000" />
+      <workItem from="1709991138261" duration="2111000" />
+      <workItem from="1709993266762" duration="1081000" />
+      <workItem from="1710060057264" duration="14061000" />
+      <workItem from="1710156012682" duration="1547000" />
+      <workItem from="1710164146526" duration="636000" />
+      <workItem from="1710581688097" duration="704000" />
+      <workItem from="1710590374966" duration="2710000" />
     </task>
     <servers />
   </component>
@@ -163,14 +183,9 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/org/example/decision/tree/impl/RegularPlayerActionTree.java</url>
-          <line>277</line>
-          <option name="timeStamp" value="24" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/org/example/decision/tree/impl/GoaliePlayerActionTree.java</url>
-          <line>355</line>
-          <option name="timeStamp" value="31" />
+          <url>file://$PROJECT_DIR$/src/main/java/org/example/decision/tree/impl/ScorePlayerActionTree.java</url>
+          <line>185</line>
+          <option name="timeStamp" value="11" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

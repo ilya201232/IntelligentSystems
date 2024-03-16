@@ -10,7 +10,11 @@ public class TackleAction extends Action {
     private final Foul foul;
 
     public TackleAction(double power, Foul foul) {
-        super(ActionType.TACKLE);
+        this(power, foul, false);
+    }
+
+    public TackleAction(double power, Foul foul, boolean repeatable) {
+        super(ActionType.TACKLE, repeatable);
         this.power = power;
         this.foul = foul;
     }
