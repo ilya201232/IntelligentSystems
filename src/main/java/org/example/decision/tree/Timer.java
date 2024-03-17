@@ -18,4 +18,8 @@ public class Timer {
     public void resetTimer() {
         value = defaultValue;
     }
+
+    public void increase() {
+        value++;
+    }
 }

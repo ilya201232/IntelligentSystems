@@ -14,8 +14,17 @@ public abstract class TimedActionTree extends ActionTree {
         timers = new HashMap<>();
     }
 
-    protected Optional<Timer> getTimer(UUID uuid) {
-        return Optional.ofNullable(timers.get(uuid));
+    @Override
+    public void alwaysAction() {
+        increaseTimers();
+    }
+
+    protected Optional<Integer> getTimerValue(UUID uuid) {
+        return Optional.ofNullable(timers.get(uuid)).map(Timer::getValue);
+    }
+
+    protected void increaseTimers() {
+        timers.values().forEach(Timer::increase);
     }
 
     protected void resetTimer(UUID uuid) {

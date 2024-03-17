@@ -2,6 +2,7 @@ package org.example.decision.tree;
 
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.example.decision.tree.impl.DoNothingActionTree;
 import org.example.model.Knowledge;
 import org.example.model.Perception;
@@ -14,6 +15,9 @@ public abstract class ActionTree {
     protected final Knowledge knowledgeGlobal;
     protected TreeNode treeRoot = TreeNode.getEmptyTreeNode();
     protected final HashMap<String, TreeNode> createdTreeNodes = new HashMap<>();
+
+    @Setter
+    protected Perception lastPerception = null;
 
     public ActionTree(Knowledge knowledgeGlobal) {
         this.knowledgeGlobal = knowledgeGlobal;
@@ -31,5 +35,9 @@ public abstract class ActionTree {
 
     public static ActionTree createEmptyActionTree() {
         return new DoNothingActionTree();
+    }
+
+    public void alwaysAction() {
+
     }
 }

@@ -7,6 +7,10 @@ import org.example.exception.FailedToParseException;
 public enum Side {
     LEFT, RIGHT;
 
+    public Side getOpposite() {
+        return Side.getOpposite(this);
+    }
+
     public static Side getOpposite(Side side) {
         if (side == Side.LEFT) {
             return Side.RIGHT;
@@ -34,5 +38,11 @@ public enum Side {
                 throw new FailedToParseException();
             }
         };
+    }
+
+
+    @Override
+    public String toString() {
+        return this == LEFT ? "l" : "r";
     }
 }

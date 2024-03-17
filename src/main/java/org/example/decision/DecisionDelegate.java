@@ -22,6 +22,8 @@ public class DecisionDelegate {
 
     public Action planAction(Perception perception) {
 
+        actionTree.alwaysAction();
+
         if (actionTree.checkMinimumConditionForPassingPerception(perception)) {
             log.debug("Received perception doesn't have all information needed for action planning.");
 
@@ -49,6 +51,7 @@ public class DecisionDelegate {
         }
 
         lastAction = actionTree.decideAction(perception);
+        actionTree.setLastPerception(perception);
 
         return lastAction;
     }

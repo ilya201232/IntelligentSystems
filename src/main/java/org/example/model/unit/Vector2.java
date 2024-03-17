@@ -5,12 +5,16 @@ import lombok.*;
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
 @ToString
 public class Vector2 {
 
     private double x;
     private double y;
+
+    public Vector2() {
+        x = 0;
+        y = 0;
+    }
 
     public Vector2(Vector2 vector) {
         x = vector.getX();
@@ -19,6 +23,27 @@ public class Vector2 {
 
     public double getDistance(Vector2 another) {
         return Math.sqrt(Math.pow((x - another.getX()), 2) + Math.pow((y - another.getY()), 2));
+    }
+
+    public Vector2 minus(Vector2 another) {
+        return new Vector2(
+                x - another.x,
+                y - another.y
+        );
+    }
+
+    public Vector2 plus(Vector2 another) {
+        return new Vector2(
+                x + another.x,
+                y + another.y
+        );
+    }
+
+    public Vector2 multiply(double factor) {
+        return new Vector2(
+                x * factor,
+                y * factor
+        );
     }
 
     public static Vector2 createVector(Vector2 startPoint, Vector2 targetPoint) {

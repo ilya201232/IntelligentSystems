@@ -6,32 +6,14 @@
   <component name="ChangeListManager">
     <list default="true" id="331b0dcf-8b50-4a8f-ac9f-3b5565986e78" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/controller/GameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/GameController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/controller/PlayerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/PlayerController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/decision/DecisionDelegate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/decision/DecisionDelegate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/decision/planner/step/KickBallForGoalStep.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/decision/planner/step/KickBallForGoalStep.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/decision/tree/ActionTree.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/decision/tree/ActionTree.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/decision/tree/impl/GoaliePlayerActionTree.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/decision/tree/impl/GoaliePlayerActionTree.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/decision/tree/impl/RegularPlayerActionTree.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/decision/tree/impl/RegularPlayerActionTree.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/model/Knowledge.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/model/Knowledge.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/model/Perception.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/model/Perception.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/model/unit/PlayMode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/model/unit/PlayMode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/decision/tree/TimedActionTree.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/decision/tree/TimedActionTree.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/decision/tree/Timer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/decision/tree/Timer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/decision/tree/impl/GoaliePlayerTimedActionTree.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/decision/tree/impl/GoaliePlayerTimedActionTree.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/model/unit/Side.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/model/unit/Side.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/model/unit/Vector2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/model/unit/Vector2.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/receiver/PerceptionFormer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/receiver/PerceptionFormer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/receiver/Receiver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/receiver/Receiver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/sender/action/Action.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/sender/action/Action.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/sender/action/CatchAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/sender/action/CatchAction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/sender/action/ChangeViewAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/sender/action/ChangeViewAction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/sender/action/DashAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/sender/action/DashAction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/sender/action/EmptyAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/sender/action/EmptyAction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/sender/action/KickAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/sender/action/KickAction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/sender/action/MoveAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/sender/action/MoveAction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/sender/action/PointToAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/sender/action/PointToAction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/sender/action/SayAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/sender/action/SayAction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/sender/action/TackleAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/sender/action/TackleAction.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/sender/action/TurnAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/sender/action/TurnAction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/utils/PlayerUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/utils/PlayerUtils.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -172,7 +154,7 @@
       <workItem from="1710156012682" duration="1547000" />
       <workItem from="1710164146526" duration="636000" />
       <workItem from="1710581688097" duration="704000" />
-      <workItem from="1710590374966" duration="2710000" />
+      <workItem from="1710590374966" duration="17870000" />
     </task>
     <servers />
   </component>

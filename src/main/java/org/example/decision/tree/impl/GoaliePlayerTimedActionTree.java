@@ -1,7 +1,6 @@
 package org.example.decision.tree.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.decision.tree.ActionTree;
 import org.example.decision.tree.TimedActionTree;
 import org.example.decision.tree.TreeNode;
 import org.example.model.Knowledge;
@@ -26,10 +25,8 @@ public class GoaliePlayerTimedActionTree extends TimedActionTree {
 
     private final static double BALL_DISTANCE_FAR = 20;
     private final static double BALL_CATCHING_DISTANCE = 2;
-    private final static int BALL_CATCHING_CHANCE_NUMBER = 5; // Resulting chance is (n-1)/n * 100%
     private final static double DASH_TO_BALL_POWER = 100;
     private final static double BALL_IN_FRONT_DIRECTION_DELTA_RAD = Math.toRadians(10);
-    private static final double BALL_KICK_DISTANCE_EPS = 1;
     private static final double BALL_KICK_POWER = 100;
 
 
@@ -51,15 +48,21 @@ public class GoaliePlayerTimedActionTree extends TimedActionTree {
     private String perimeterBottomFlagName = null;
     private String perimeterTopFlagName = null;
 
-    private Boolean isCatching = null;
+
     private Integer catchingProgress = -1;
     private int lastSentCatch;
+
+    private final UUID lookoutTimerUUID;
+    private final static Integer LOOKOUT_TIME_POINT = 20;
+    private List<Vector2> lookoutMarkersPositions = new ArrayList<>();
+    private Integer lookoutProgress = 0;
+    private Boolean needToRealign = true;
 
 
     public GoaliePlayerTimedActionTree(Knowledge knowledgeGlobal) {
         super(knowledgeGlobal);
 
-
+        lookoutTimerUUID = createTimer();
     }
 
     @Override
@@ -69,39 +72,28 @@ public class GoaliePlayerTimedActionTree extends TimedActionTree {
 
     @Override
     protected TreeNode createTreeRoot() {
-        TreeNode seeMarkTree = createSeeMarkTree();
-//        createdTreeNodes.put("stillRotating", stillRotatingTree);
+        TreeNode facingMarkTree = createFacingMarkTree();
+        createdTreeNodes.put("facingMark", facingMarkTree);
 
         return (perception, knowledge, args) -> {
 
             // Initialising
 
             if (goalFlagName == null || oppositeGoalFlagName == null || perimeterCenterFlagName == null || perimeterBottomFlagName == null || perimeterTopFlagName == null) {
-                goalFlagName = "g " + (knowledge.getTeamSide() == Side.LEFT ? "l" : "r");
-                oppositeGoalFlagName = "g " + (knowledge.getTeamSide() == Side.LEFT ? "r" : "l");
-                perimeterCenterFlagName = "f p " + (knowledge.getTeamSide() == Side.LEFT ? "l" : "r") + " c";
-                perimeterTopFlagName = "f p " + (knowledge.getTeamSide() == Side.LEFT ? "l" : "r") + " t";
-                perimeterBottomFlagName = "f p " + (knowledge.getTeamSide() == Side.LEFT ? "l" : "r") + " b";
+                goalFlagName = "g " + knowledge.getTeamSide();
+                oppositeGoalFlagName = "g " + knowledge.getTeamSide().getOpposite();
+                perimeterCenterFlagName = "f p " + knowledge.getTeamSide() + " c";
+                perimeterTopFlagName = "f p " + knowledge.getTeamSide() + " t";
+                perimeterBottomFlagName = "f p " + knowledge.getTeamSide() + " b";
+
+                lookoutMarkersPositions.add(knowledge.getMarkersPositions().get("f " + knowledge.getTeamSide() + " b"));
+                lookoutMarkersPositions.add(knowledge.getMarkersPositions().get("f p " + knowledge.getTeamSide() + " b"));
+                lookoutMarkersPositions.add(knowledge.getMarkersPositions().get("f p " + knowledge.getTeamSide() + " c"));
+                lookoutMarkersPositions.add(knowledge.getMarkersPositions().get("f p " + knowledge.getTeamSide() + " t"));
+                lookoutMarkersPositions.add(knowledge.getMarkersPositions().get("f " + knowledge.getTeamSide() + " t"));
             }
 
-            return seeMarkTree.getResultAction(perception, knowledge);
-        };
-    }
-
-    private TreeNode createSeeMarkTree() {
-        TreeNode facingMarkTree = createFacingMarkTree();
-
-        return (perception, knowledge, args) -> {
-            // Always face opponent's goal marker. dir(f<l/r>) ~ (-60, 60)
-
-            Optional<Marker> oppositeGoalMarker = PerceptionUtils.getMarker(perception, oppositeGoalFlagName);
-
-            if (oppositeGoalMarker.isEmpty()) {
-                // If opposite goal marker is not visible - turn until it is
-                return new TurnAction(SEEK_TURN_STEP);
-            } else {
-                return facingMarkTree.getResultAction(perception, knowledge, oppositeGoalMarker.get());
-            }
+            return facingMarkTree.getResultAction(perception, knowledge);
         };
     }
 
@@ -109,13 +101,35 @@ public class GoaliePlayerTimedActionTree extends TimedActionTree {
         TreeNode isBallFarTree = createIsBallFarTree();
 
         return (perception, knowledge, args) -> {
-            Marker oppositeGoalMarker = (Marker) args[0];
+//            Marker oppositeGoalMarker = (Marker) args[0];
 
-            if (Math.abs(oppositeGoalMarker.getDirection()) > ABS_DELTA_OPPOSITE_MARKER_DIRECTION_RAD) {
-                return new TurnAction(Math.toDegrees(oppositeGoalMarker.getDirection()));
-            } else {
-                return isBallFarTree.getResultAction(perception, knowledge, args);
+            if (needToRealign) {
+                Optional<Marker> oppositeGoalMarker = PerceptionUtils.getMarker(perception, oppositeGoalFlagName);
+
+                if (oppositeGoalMarker.isEmpty()) {
+                    Optional<Double> oppositeGoalMarkerDirection = PlayerUtils.calcRotationToMarker(oppositeGoalFlagName, perception, knowledge);
+
+                    if (oppositeGoalMarkerDirection.isEmpty()) {
+                        return new TurnAction(SEEK_TURN_STEP);
+                    } else {
+                        if (Math.abs(oppositeGoalMarkerDirection.get()) > ABS_DELTA_OPPOSITE_MARKER_DIRECTION_RAD) {
+                            return new TurnAction(Math.toDegrees(oppositeGoalMarkerDirection.get()));
+                        } else {
+                            needToRealign = false;
+                            return isBallFarTree.getResultAction(perception, knowledge, args);
+                        }
+                    }
+                } else {
+                    if (Math.abs(oppositeGoalMarker.get().getDirection()) > ABS_DELTA_OPPOSITE_MARKER_DIRECTION_RAD) {
+                        return new TurnAction(Math.toDegrees(oppositeGoalMarker.get().getDirection()));
+                    } else {
+                        needToRealign = false;
+                        return isBallFarTree.getResultAction(perception, knowledge, args);
+                    }
+                }
             }
+
+            return isBallFarTree.getResultAction(perception, knowledge, args);
         };
     }
 
@@ -129,16 +143,31 @@ public class GoaliePlayerTimedActionTree extends TimedActionTree {
         return (perception, knowledge, args) -> {
             Ball ball = perception.getBallSaw();
 
-            if (ball == null || ball.getDistance() == null || ball.getDistance() > BALL_DISTANCE_FAR) {
+            if (ball == null || ball.getDistance() == null) {
                 return getPlayerAndMarkerTree.getResultAction(perception, knowledge, args);
             } else {
-                List<Object> argsModified = new ArrayList<>(Arrays.stream(args).toList());
-                argsModified.add(ball);
+                resetTimer(lookoutTimerUUID);
+                lookoutProgress = 0;
+                needToRealign = false;
 
-                Object[] argsNew = argsModified.toArray();
+                // Always watch the ball
+                if (Math.abs(ball.getDirection()) > BALL_IN_FRONT_DIRECTION_DELTA_RAD) {
+                    return new TurnAction(Math.toDegrees(ball.getDirection()));
+                }
 
-                return isCatchingTree.getResultAction(perception, knowledge, argsNew);
+                if (ball.getDistance() > BALL_DISTANCE_FAR) {
+
+                    return getPlayerAndMarkerTree.getResultAction(perception, knowledge, args);
+                } else {
+                    List<Object> argsModified = new ArrayList<>(Arrays.stream(args).toList());
+                    argsModified.add(ball);
+
+                    Object[] argsNew = argsModified.toArray();
+
+                    return isCatchingTree.getResultAction(perception, knowledge, argsNew);
+                }
             }
+
         };
     }
 
@@ -150,7 +179,6 @@ public class GoaliePlayerTimedActionTree extends TimedActionTree {
         return (perception, knowledge, args) -> {
             // If ball is not visible or it's too far
 
-            isCatching = null;
             catchingProgress = -1;
             lastSentCatch = Integer.MAX_VALUE;
 
@@ -159,14 +187,14 @@ public class GoaliePlayerTimedActionTree extends TimedActionTree {
 
             if (playerPosition.isEmpty()) {
                 log.error("Can't proceed! Player calculation has failed!");
-                return EmptyAction.instance; // TODO: May be dash a little to the side
+                return new TurnAction(SEEK_TURN_STEP);
             }
 
             Optional<Marker> marker = perception.getMarkersSaw().stream().findAny();
 
             if (marker.isEmpty()) {
                 log.error("Can't proceed! Failed to get any marker to calculate rotations.");
-                return EmptyAction.instance; // TODO: May be dash a little to the side
+                return new TurnAction(SEEK_TURN_STEP);
             }
 
 
@@ -180,6 +208,8 @@ public class GoaliePlayerTimedActionTree extends TimedActionTree {
     }
 
     private TreeNode createCheckPositionTree() {
+
+        TreeNode lookoutTree = createLookoutTree();
 
         return (perception, knowledge, args) -> {
 
@@ -200,7 +230,7 @@ public class GoaliePlayerTimedActionTree extends TimedActionTree {
                     direction += 2 * Math.PI;
                 }
 
-                return new DashAction(DASH_TO_GOAL_POWER, Math.toDegrees(direction));
+                return new DashAction(DASH_TO_GOAL_POWER, Math.toDegrees(direction), true);
             }
 
 
@@ -217,7 +247,7 @@ public class GoaliePlayerTimedActionTree extends TimedActionTree {
                     direction += 2 * Math.PI;
                 }
 
-                return new DashAction(-DASH_TO_FP_MARKS_POWER, Math.toDegrees(direction));
+                return new DashAction(-DASH_TO_FP_MARKS_POWER, Math.toDegrees(direction), true);
             } else if (fpcDist > FPC_MAX_DISTANCE) {
                 // Calculate rotation angle and dash in that direction
                 double direction = marker.getDirection() + Vector2.getAngleBetweenVectors(Vector2.createVector(playerPosition, marker.getPosition()), Vector2.createVector(playerPosition, fpcPosition));
@@ -228,7 +258,7 @@ public class GoaliePlayerTimedActionTree extends TimedActionTree {
                     direction += 2 * Math.PI;
                 }
 
-                return new DashAction(DASH_TO_FP_MARKS_POWER, Math.toDegrees(direction));
+                return new DashAction(DASH_TO_FP_MARKS_POWER, Math.toDegrees(direction), true);
             }
 
 
@@ -245,7 +275,7 @@ public class GoaliePlayerTimedActionTree extends TimedActionTree {
                     direction += 2 * Math.PI;
                 }
 
-                return new DashAction(-DASH_TO_FP_MARKS_POWER, Math.toDegrees(direction));
+                return new DashAction(-DASH_TO_FP_MARKS_POWER, Math.toDegrees(direction), true);
             } else if (fpbDist > FP_SIDE_MAX_DISTANCE) {
                 // Calculate rotation angle and dash in that direction
                 double direction = marker.getDirection() + Vector2.getAngleBetweenVectors(Vector2.createVector(playerPosition, marker.getPosition()), Vector2.createVector(playerPosition, fpbPosition));
@@ -256,7 +286,7 @@ public class GoaliePlayerTimedActionTree extends TimedActionTree {
                     direction += 2 * Math.PI;
                 }
 
-                return new DashAction(DASH_TO_FP_MARKS_POWER, Math.toDegrees(direction));
+                return new DashAction(DASH_TO_FP_MARKS_POWER, Math.toDegrees(direction), true);
             }
 
 
@@ -273,7 +303,7 @@ public class GoaliePlayerTimedActionTree extends TimedActionTree {
                     direction += 2 * Math.PI;
                 }
 
-                return new DashAction(-DASH_TO_FP_MARKS_POWER, Math.toDegrees(direction));
+                return new DashAction(-DASH_TO_FP_MARKS_POWER, Math.toDegrees(direction), true);
             } else if (fptDist > FP_SIDE_MAX_DISTANCE) {
                 // Calculate rotation angle and dash in that direction
                 double direction = marker.getDirection() + Vector2.getAngleBetweenVectors(Vector2.createVector(playerPosition, marker.getPosition()), Vector2.createVector(playerPosition, fptPosition));
@@ -284,52 +314,74 @@ public class GoaliePlayerTimedActionTree extends TimedActionTree {
                     direction += 2 * Math.PI;
                 }
 
-                return new DashAction(DASH_TO_FP_MARKS_POWER, Math.toDegrees(direction));
+                return new DashAction(DASH_TO_FP_MARKS_POWER, Math.toDegrees(direction), true);
+            }
+
+            if (getTimerValue(lookoutTimerUUID).orElse(-1) > LOOKOUT_TIME_POINT) {
+                return lookoutTree.getResultAction(perception, knowledge, args);
             }
 
             return EmptyAction.instance;
         };
     }
 
+    private TreeNode createLookoutTree() {
+
+        return (perception, knowledge, args) -> {
+            if (lookoutProgress == lookoutMarkersPositions.size()) {
+                lookoutProgress = 0;
+                needToRealign = true;
+                resetTimer(lookoutTimerUUID);
+
+                return createdTreeNodes.get("facingMark").getResultAction(perception, knowledge);
+            }
+
+            Vector2 markerPosition = lookoutMarkersPositions.get(lookoutProgress);
+            lookoutProgress++;
+
+            Optional<Double> rotationOptional = PlayerUtils.calcRotationToCoordinates(markerPosition, perception, knowledge);
+
+            if (rotationOptional.isEmpty()) {
+                needToRealign = true;
+                return EmptyAction.instance;
+            }
+
+            return new TurnAction(Math.toDegrees(rotationOptional.get()));
+        };
+    }
 
     private TreeNode createIsCatchingTree() {
-
-        TreeNode kickBallTree = createKickBallTree();
         TreeNode catchBallTree = createCatchBallTree();
 
         return (perception, knowledge, args) -> {
-            if (isCatching == null) {
-//                isCatching = random.nextInt(BALL_CATCHING_CHANCE_NUMBER) != 0; // 80% chance for catching
-                // TODO: debug
-                isCatching = true;
-            }
 
             Optional<Marker> centerMarker = perception.getMarkersSaw().stream().filter(marker1 -> marker1.getId().equals("f c")).findFirst();
-            if (isCatching) {
 
-                if (centerMarker.isEmpty() || centerMarker.get().getDistance() == null || centerMarker.get().getDistance() < 39) {
-                    List<Object> argsModified = new ArrayList<>(Arrays.stream(args).toList());
-                    argsModified.removeLast();
+            double distance;
+            if (centerMarker.isEmpty() || centerMarker.get().getDistance() == null) {
+                Optional<Vector2> playerPosition = PlayerUtils.calcThisPlayerPosition(perception, knowledge);
 
-                    Object[] argsNew = argsModified.toArray();
-
-                    createdTreeNodes.get("getPlayerAndMarker").getResultAction(perception, knowledge, argsNew);
+                if (playerPosition.isEmpty()) {
+                    return catchBallTree.getResultAction(perception, knowledge, args);
                 }
 
-                // The goal is to catch the ball
-                return catchBallTree.getResultAction(perception, knowledge, args);
+                distance = playerPosition.get().getDistance(new Vector2());
             } else {
-                if (centerMarker.isEmpty() || centerMarker.get().getDistance() == null || centerMarker.get().getDistance() < 34) {
-                    List<Object> argsModified = new ArrayList<>(Arrays.stream(args).toList());
-                    argsModified.removeLast();
-
-                    Object[] argsNew = argsModified.toArray();
-
-                    createdTreeNodes.get("getPlayerAndMarker").getResultAction(perception, knowledge, argsNew);
-                }
-                // The goal is to kick the ball
-                return kickBallTree.getResultAction(perception, knowledge, args);
+                distance = centerMarker.get().getDistance();
             }
+
+            if (distance < 39) {
+                List<Object> argsModified = new ArrayList<>(Arrays.stream(args).toList());
+                argsModified.removeLast();
+
+                Object[] argsNew = argsModified.toArray();
+                resetTimer(lookoutTimerUUID);
+
+                createdTreeNodes.get("getPlayerAndMarker").getResultAction(perception, knowledge, argsNew);
+            }
+
+            // The goal is to catch the ball
+            return catchBallTree.getResultAction(perception, knowledge, args);
         };
     }
 
@@ -353,106 +405,54 @@ public class GoaliePlayerTimedActionTree extends TimedActionTree {
                 } else {
                     if (ball.getDistance() < BALL_CATCHING_DISTANCE) {
                         lastSentCatch = perception.getCycleNumber();
-                        return new CatchAction(Math.toDegrees(ball.getDirection()));
+                        return new CatchAction(Math.toDegrees(ball.getDirection()), true);
                     } else {
-                        if (ball.getDistance() > 5 && Math.abs(ball.getDirection()) > BALL_IN_FRONT_DIRECTION_DELTA_RAD) {
-                            // Dash to the side until the ball is in front of goalie
+                        if (ball.getDistance() > 5 && lastPerception != null) {
 
-                            Optional<Vector2> playerPosition = PlayerUtils.calcThisPlayerPosition(perception, knowledge);
+                            Ball lastSeenBall = lastPerception.getBallSaw();
 
-                            if (playerPosition.isEmpty()) {
-                                return new DashAction(DASH_TO_BALL_POWER, Math.toDegrees(ball.getDirection()));
+                            if (lastSeenBall == null) {
+                                return new DashAction(DASH_TO_BALL_POWER * 0.8, Math.toDegrees(ball.getDirection()), true);
                             }
 
-                            Optional<Marker> marker = perception.getMarkersSaw().stream().findAny();
+                            Optional<Vector2> lastBallPosition = PlayerUtils.calcAnotherObjectPosition(lastPerception, knowledge, lastSeenBall);
 
-                            if (marker.isEmpty()) {
-                                return new DashAction(DASH_TO_BALL_POWER, Math.toDegrees(ball.getDirection()));
+                            if (lastBallPosition.isEmpty()) {
+                                return new DashAction(DASH_TO_BALL_POWER * 0.8, Math.toDegrees(ball.getDirection()), true);
                             }
 
-                            int sign = (int) Math.signum(ball.getDirection());
+                            Optional<Vector2> ballPosition = PlayerUtils.calcAnotherObjectPosition(perception, knowledge, ball);
 
-                            Vector2 vector = new Vector2(
-                                    0,
-                                    sign * (knowledge.getTeamSide() == Side.LEFT ? 1 : -1)
-                            );
-
-                            double direction = marker.get().getDirection() + Vector2.getAngleBetweenVectors(Vector2.createVector(playerPosition.get(), marker.get().getPosition()), vector);
-
-                            if (direction > Math.PI) {
-                                direction -= 2 * Math.PI;
-                            } else if (direction < -Math.PI) {
-                                direction += 2 * Math.PI;
+                            if (ballPosition.isEmpty()) {
+                                return new DashAction(DASH_TO_BALL_POWER * 0.8, Math.toDegrees(ball.getDirection()), true);
                             }
 
-                            return new DashAction(DASH_TO_BALL_POWER * 0.8, Math.toDegrees(direction));
-                        } else {
-                            return new DashAction(DASH_TO_BALL_POWER * 0.8, Math.toDegrees(ball.getDirection()));
+                            Vector2 ballMovementVector = ballPosition.get().minus(lastBallPosition.get());
+
+                            Vector2 approximatePosition = ballPosition.get().plus(ballMovementVector.multiply(2));
+
+                            Optional<Double> direction = PlayerUtils.calcRotationToCoordinates(approximatePosition, perception, knowledge);
+
+                            return new DashAction(DASH_TO_BALL_POWER * 0.8, Math.toDegrees(direction.orElse(ball.getDirection())), true);
                         }
+
+                        return new DashAction(DASH_TO_BALL_POWER * 0.8, Math.toDegrees(ball.getDirection()), true);
                     }
                 }
             }
 
             if (catchingProgress == 1) {
                 catchingProgress = 2;
-                return new MoveAction(knowledge.getStartPosition());
+                return new MoveAction(knowledge.getStartPosition(), true);
             }
 
             if (catchingProgress == 2) {
                 catchingProgress = -1;
-                return new KickAction(BALL_KICK_POWER, Math.toDegrees(oppositeGoalMarker.getDirection()));
+                return new KickAction(BALL_KICK_POWER, Math.toDegrees(oppositeGoalMarker.getDirection()), true);
             }
 
             return EmptyAction.instance;
         };
     }
 
-    private TreeNode createKickBallTree() {
-
-        return (perception, knowledge, args) -> {
-
-            Marker oppositeGoalMarker = (Marker) args[0];
-            Ball ball = (Ball) args[1];
-
-
-            if (ball.getDistance() < BALL_KICK_DISTANCE_EPS) {
-                return new KickAction(BALL_KICK_POWER, Math.toDegrees(oppositeGoalMarker.getDirection()));
-            } else {
-                if (ball.getDistance() > 7 && Math.abs(ball.getDirection()) > BALL_IN_FRONT_DIRECTION_DELTA_RAD) {
-                    // Dash to the side until the ball is in front of goalie
-
-                    Optional<Vector2> playerPosition = PlayerUtils.calcThisPlayerPosition(perception, knowledge);
-
-                    if (playerPosition.isEmpty()) {
-                        return new DashAction(DASH_TO_BALL_POWER, Math.toDegrees(ball.getDirection()));
-                    }
-
-                    Optional<Marker> marker = perception.getMarkersSaw().stream().findAny();
-
-                    if (marker.isEmpty()) {
-                        return new DashAction(DASH_TO_BALL_POWER, Math.toDegrees(ball.getDirection()));
-                    }
-
-                    int sign = (int) Math.signum(ball.getDirection());
-
-                    Vector2 vector = new Vector2(
-                            0,
-                            sign * (knowledge.getTeamSide() == Side.LEFT ? 1 : -1)
-                    );
-
-                    double direction = marker.get().getDirection() + Vector2.getAngleBetweenVectors(Vector2.createVector(playerPosition.get(), marker.get().getPosition()), vector);
-
-                    if (direction > Math.PI) {
-                        direction -= 2 * Math.PI;
-                    } else if (direction < -Math.PI) {
-                        direction += 2 * Math.PI;
-                    }
-
-                    return new DashAction(DASH_TO_BALL_POWER * 0.8, Math.toDegrees(direction));
-                } else {
-                    return new DashAction(DASH_TO_BALL_POWER * 0.8, Math.toDegrees(ball.getDirection()));
-                }
-            }
-        };
-    }
 }
