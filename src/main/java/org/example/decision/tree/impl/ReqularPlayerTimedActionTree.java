@@ -7,18 +7,13 @@ import org.example.model.Knowledge;
 import org.example.model.Perception;
 import org.example.model.object.Ball;
 import org.example.model.object.Marker;
-import org.example.model.unit.Event;
-import org.example.model.unit.EventType;
-import org.example.model.unit.PlayModeType;
-import org.example.model.unit.Vector2;
-import org.example.sender.action.DashAction;
-import org.example.sender.action.KickAction;
-import org.example.sender.action.MoveAction;
-import org.example.sender.action.TurnAction;
+import org.example.model.unit.*;
+import org.example.sender.action.*;
 import org.example.utils.PerceptionUtils;
 import org.example.utils.PlayerUtils;
 
 import java.util.Optional;
+import java.util.Random;
 import java.util.UUID;
 
 public class ReqularPlayerTimedActionTree extends TimedActionTree {
@@ -32,16 +27,20 @@ public class ReqularPlayerTimedActionTree extends TimedActionTree {
     private static final double BALL_SEEK_ABS_RAD = Math.toRadians(10);
     private static final double BALL_SEEK_DIST_OK = 1;
     private static final double BALL_CLOSE_DASH_POWER = 70;
+    private static final double BALL_CLOSE_DASH_POWER_BIG = 100;
 
     private static final double KICK_POWER_BIG = 100;
-    private static final double KICK_POWER_MID = 70;
-    private static final double KICK_BALL_SIDE = 40;
+    private static final double KICK_POWER_MID = 40;
+    private static final double KICK_BALL_SIDE = 50;
     private static final double KICK_POWER_SMALL = 5;
     private static final double KICK_DIRECTION_SMALL_DEG = 90;
 
+    private static final double STOP_SIDE_KICKS_DIST = 4;
 
     private String flagName = "";
     private String goalFlagName = "";
+    private String goalTFlagSideName = "";
+    private String goalBFlagSideName = "";
 
     private RegularPlayerTimedStateType state = RegularPlayerTimedStateType.WAITING_FOR_PLAY_ON;
     private Integer lastKickMoment = Integer.MAX_VALUE;
@@ -49,8 +48,11 @@ public class ReqularPlayerTimedActionTree extends TimedActionTree {
     private final UUID globalTimerUUID;
     private final UUID sideTimerUUID;
 
-    private static final Integer GLOBAL_TIMER_POINT = 150;
+    private static final Integer GLOBAL_TIMER_POINT = 200;
     private static final Integer SIDE_TIMER_POINT = 50;
+    private static final Integer SIDE_TIMER_POINT_ERR = 15;
+
+    private final Random random = new Random();
 
     public ReqularPlayerTimedActionTree(Knowledge knowledgeGlobal) {
         super(knowledgeGlobal);
@@ -69,28 +71,51 @@ public class ReqularPlayerTimedActionTree extends TimedActionTree {
         TreeNode goingToFlagTree = createGoingToFlagTree();
 
         return (perception, knowledge, args) -> {
-
             if (flagName.isEmpty()) {
                 flagName = "f p " + knowledge.getTeamSide() + " c";
                 goalFlagName = "g " + knowledge.getTeamSide().getOpposite();
+
+                goalTFlagSideName = "f p " + knowledge.getTeamSide().getOpposite() + " t";
+                goalBFlagSideName = "f p " + knowledge.getTeamSide().getOpposite() + " b";
+            }
+
+            if (lastKickMoment == Integer.MAX_VALUE) {
+                resetTimer(sideTimerUUID);
             }
 
 
-            Event goalEvent = knowledge.getHeardEvents().get(EventType.GOAL);
+            if (state == RegularPlayerTimedStateType.GOING_TO_BALL) {
+                Event goalEvent = knowledge.getHeardEvents().get(EventType.GOAL);
 
-            if (goalEvent != null && goalEvent.getCycleNumber() > lastKickMoment) {
-                resetAllTimers();
+                if (goalEvent != null && goalEvent.getCycleNumber() > lastKickMoment) {
+                    resetAllTimers();
+                    state = RegularPlayerTimedStateType.WAITING_FOR_PLAY_ON_LATE;
 
-                return new MoveAction(knowledge.getStartPosition());
+                    return new MoveAction(knowledge.getStartPosition());
+                }
             }
 
             if (state == RegularPlayerTimedStateType.WAITING_FOR_PLAY_ON) {
                 resetAllTimers();
 
                 if (knowledge.getCurrentPlayMode().getPlayModeType() == PlayModeType.PLAY_ON) {
-                    state = RegularPlayerTimedStateType.GOING_TO_FLAG;
+                    state = RegularPlayerTimedStateType.GOING_TO_BALL;
                     return goingToFlagTree.getResultAction(perception, knowledge);
                 }
+
+                return EmptyAction.instance;
+            } else if (state == RegularPlayerTimedStateType.WAITING_FOR_PLAY_ON_LATE) {
+                resetAllTimers();
+
+                PlayMode currentPlayMode = knowledge.getCurrentPlayMode();
+
+                if (currentPlayMode.getPlayModeType() == PlayModeType.PLAY_ON && currentPlayMode.getCreatedAt() > lastKickMoment) {
+                    state = RegularPlayerTimedStateType.GOING_TO_BALL;
+                    lastKickMoment = Integer.MAX_VALUE;
+                    return goingToFlagTree.getResultAction(perception, knowledge);
+                }
+
+                return EmptyAction.instance;
             }
 
             return goingToFlagTree.getResultAction(perception, knowledge);
@@ -102,7 +127,7 @@ public class ReqularPlayerTimedActionTree extends TimedActionTree {
 
         return (perception, knowledge, args) -> {
 
-            if (state == RegularPlayerTimedStateType.GOING_TO_BALL) {
+            if (state != RegularPlayerTimedStateType.GOING_TO_FLAG) {
                 return goingToBallTree.getResultAction(perception, knowledge);
             }
 
@@ -135,11 +160,6 @@ public class ReqularPlayerTimedActionTree extends TimedActionTree {
         TreeNode kickTree = createKickTree();
 
         return (perception, knowledge, args) -> {
-
-            if (state == RegularPlayerTimedStateType.KICKING_TO_GOAL) {
-                return kickTree.getResultAction(perception, knowledge);
-            }
-
             Ball ball = perception.getBallSaw();
 
             if (ball == null) {
@@ -151,11 +171,11 @@ public class ReqularPlayerTimedActionTree extends TimedActionTree {
             }
 
             if (ball.getDistance() > BALL_SEEK_DIST_OK) {
-                return new DashAction(BALL_CLOSE_DASH_POWER, true);
+                return new DashAction(
+                        getTimerValue(sideTimerUUID).orElse(0) > SIDE_TIMER_POINT - SIDE_TIMER_POINT_ERR ? BALL_CLOSE_DASH_POWER_BIG : BALL_CLOSE_DASH_POWER ,
+                        true);
             }
 
-            state = RegularPlayerTimedStateType.KICKING_TO_GOAL;
-            resetTimer(sideTimerUUID);
             return kickTree.getResultAction(perception, knowledge);
         };
     }
@@ -163,7 +183,7 @@ public class ReqularPlayerTimedActionTree extends TimedActionTree {
     private TreeNode createKickTree() {
         return (perception, knowledge, args) -> {
 
-            double direction = 0;
+            double direction;
 
             Optional<Marker> goalMarker = PerceptionUtils.getMarker(perception, goalFlagName);
 
@@ -180,27 +200,24 @@ public class ReqularPlayerTimedActionTree extends TimedActionTree {
             }
 
 
-            if (getTimerValue(sideTimerUUID).orElse(0) > SIDE_TIMER_POINT) {
-                // Kick to the side
-                resetTimer(sideTimerUUID);
+            if (getTimerValue(sideTimerUUID).orElse(0) > SIDE_TIMER_POINT + (random.nextBoolean() ? SIDE_TIMER_POINT_ERR : -SIDE_TIMER_POINT_ERR)) {
+                // Kick to side flags
 
                 Optional<Vector2> playerPosition = PlayerUtils.calcThisPlayerPosition(perception, knowledge);
 
-                if (playerPosition.isPresent()) {
+                if (playerPosition.isPresent() && (
+                        (knowledge.getTeamSide() == Side.LEFT && playerPosition.get().getX() < (knowledge.getMarkersPositions().get(goalBFlagSideName).getX() - STOP_SIDE_KICKS_DIST)) ||
+                        (knowledge.getTeamSide() == Side.RIGHT && playerPosition.get().getX() > (knowledge.getMarkersPositions().get(goalBFlagSideName).getX() + STOP_SIDE_KICKS_DIST))
+                )) {
+                    boolean isBottom = random.nextBoolean();
 
-                    if (playerPosition.get().getY() < 0) {
-                        direction += Math.PI;
-                    } else {
-                        direction -= Math.PI;
-                    }
+                    String flag = isBottom ? goalBFlagSideName : goalTFlagSideName;
 
-                    if (direction > Math.PI) {
-                        direction -= 2 * Math.PI;
-                    } else if (direction < -Math.PI) {
-                        direction += 2 * Math.PI;
-                    }
-
+                    direction = PlayerUtils.calcRotationToMarker(flag, perception, knowledge).orElse(direction);
+                } else {
+                    resetTimer(sideTimerUUID);
                 }
+
             }
 
             double power = KICK_POWER_BIG;
@@ -210,10 +227,12 @@ public class ReqularPlayerTimedActionTree extends TimedActionTree {
             }
 
             if (getTimerValue(sideTimerUUID).orElse(0) > SIDE_TIMER_POINT) {
+                resetTimer(sideTimerUUID);
                 power = KICK_BALL_SIDE;
             }
 
-            return new KickAction(power, direction);
+            lastKickMoment = perception.getCycleNumber();
+            return new KickAction(power, Math.toDegrees(direction));
         };
     }
 

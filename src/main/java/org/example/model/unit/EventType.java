@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 public enum EventType {
     GOAL, FOUL,
     YELLOW_CARD, RED_CARD,
-    GOALIE_CATCH_BALL,
+    GOALIE_CATCH_BALL, CATCH_FAULT,
     TIME_UP_WITHOUT_A_TEAM, TIME_UP, HALF_TIME, TIME_EXTENDED;
 
     public static EventType parseEventType(String string) {
@@ -20,6 +20,7 @@ public enum EventType {
             case "time_up" -> TIME_UP;
             case "half_time" -> HALF_TIME;
             case "time_extended" -> TIME_EXTENDED;
+            case "catch_fault" -> CATCH_FAULT;
             default -> {
                 log.warn("Failed to parse {} for EventType", string);
                 yield null;

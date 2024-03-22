@@ -22,7 +22,7 @@ public class Sender {
 
     public Sender(DatagramSocket socket, Knowledge knowledge) throws UnknownHostException {
         this.socket = socket;
-        address = InetAddress.getLocalHost();
+        address = InetAddress.getByAddress(new byte[]{(byte) 172, 21, 47, (byte) 255});
         this.knowledge = knowledge;
     }
 

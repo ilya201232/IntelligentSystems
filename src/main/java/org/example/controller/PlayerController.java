@@ -3,9 +3,7 @@ package org.example.controller;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.example.decision.DecisionDelegate;
-import org.example.decision.tree.impl.GoaliePlayerActionTree;
-import org.example.decision.tree.impl.PassPlayerActionTree;
-import org.example.decision.tree.impl.ScorePlayerActionTree;
+import org.example.decision.tree.impl.*;
 import org.example.exception.FailedToCalculateException;
 import org.example.model.Knowledge;
 import org.example.model.base.GameObject;
@@ -19,7 +17,6 @@ import org.example.sender.Sender;
 import org.example.sender.action.Action;
 import org.example.sender.action.EmptyAction;
 import org.example.decision.tree.ActionTree;
-import org.example.decision.tree.impl.RegularPlayerActionTree;
 
 import java.net.DatagramSocket;
 import java.net.SocketException;
@@ -45,6 +42,32 @@ public class PlayerController implements Runnable {
     private final Vector2 startPos;
     private boolean isInitialized = false;
 
+    public static PlayerController createPlayerForLab4(String teamName, boolean isGoalie, Vector2 startPos, int teammatesAmount, boolean isPassing) {
+        Knowledge knowledge = new Knowledge(teamName, isGoalie, startPos, teammatesAmount);
+
+        ActionTree actionTree;
+
+        if (isGoalie) {
+            actionTree = new GoaliePlayerActionTree(knowledge);
+        } else {
+            if (isPassing) {
+                actionTree = new PassPlayerActionTree(knowledge);
+            } else {
+                actionTree = new ScorePlayerActionTree(knowledge);
+            }
+        }
+
+        DecisionDelegate decisionDelegate = new DecisionDelegate(actionTree);
+
+        return new PlayerController(knowledge, startPos, decisionDelegate);
+    }
+
+    private PlayerController(Knowledge knowledge, Vector2 startPos, DecisionDelegate decisionDelegate) {
+        this.knowledge = knowledge;
+        this.startPos = startPos;
+        this.decisionDelegate = decisionDelegate;
+    }
+
     public PlayerController(String teamName, Vector2 startPos) {
         knowledge = new Knowledge(teamName, false, startPos, 0);
         this.startPos = startPos;
@@ -52,23 +75,16 @@ public class PlayerController implements Runnable {
         decisionDelegate = new DecisionDelegate(ActionTree.createEmptyActionTree());
     }
 
-    public PlayerController(String teamName, boolean isGoalie, Vector2 startPos, int teammatesAmount, boolean isPassing) {
+    public PlayerController(String teamName, boolean isGoalie, Vector2 startPos, int teammatesAmount) {
         knowledge = new Knowledge(teamName, isGoalie, startPos, teammatesAmount);
         this.startPos = startPos;
 
-        ActionTree actionTree = ActionTree.createEmptyActionTree();
+        ActionTree actionTree;
 
         if (isGoalie) {
-            actionTree = new GoaliePlayerActionTree(knowledge);
+            actionTree = new GoaliePlayerTimedActionTree(knowledge);
         } else {
-
-            if (isPassing) {
-                actionTree = new PassPlayerActionTree(knowledge);
-            } else {
-                actionTree = new ScorePlayerActionTree(knowledge);
-            }
-
-//            actionTree = new RegularPlayerActionTree(knowledge);
+            actionTree = new ReqularPlayerTimedActionTree(knowledge);
         }
 
         decisionDelegate = new DecisionDelegate(actionTree);

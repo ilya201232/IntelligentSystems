@@ -6,14 +6,15 @@
   <component name="ChangeListManager">
     <list default="true" id="331b0dcf-8b50-4a8f-ac9f-3b5565986e78" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/decision/DecisionDelegate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/decision/DecisionDelegate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/decision/tree/ActionTree.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/decision/tree/ActionTree.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/decision/tree/TimedActionTree.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/decision/tree/TimedActionTree.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/decision/tree/Timer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/decision/tree/Timer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/controller/GameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/GameController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/controller/PlayerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/PlayerController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/decision/tree/impl/GoaliePlayerTimedActionTree.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/decision/tree/impl/GoaliePlayerTimedActionTree.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/model/unit/Side.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/model/unit/Side.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/model/unit/Vector2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/model/unit/Vector2.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/sender/action/TurnAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/sender/action/TurnAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/decision/tree/impl/ReqularPlayerTimedActionTree.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/decision/tree/impl/ReqularPlayerTimedActionTree.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/decision/tree/impl/data/RegularPlayerTimedStateType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/decision/tree/impl/data/RegularPlayerTimedStateType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/model/unit/EventType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/model/unit/EventType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/sender/Sender.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/sender/Sender.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/log4j2.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/log4j2.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,8 +25,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Interface" />
-        <option value="Enum" />
         <option value="Class" />
+        <option value="Enum" />
       </list>
     </option>
   </component>
@@ -51,11 +52,15 @@
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/ilyae/AppData/Roaming/JetBrains/IntelliJIdea2023.3/scratches&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
@@ -69,6 +74,9 @@
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="org.example.model.unit" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\ilyae\AppData\Roaming\JetBrains\IntelliJIdea2023.3\scratches" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="org.example.model.unit" />
@@ -102,6 +110,13 @@
         <item itemvalue="Java Scratch.Scratch" />
       </list>
     </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="jdk-21.0.2-openjdk-21.0.2-4caba194b151-4f524021" />
+      </set>
+    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -155,11 +170,27 @@
       <workItem from="1710164146526" duration="636000" />
       <workItem from="1710581688097" duration="704000" />
       <workItem from="1710590374966" duration="17870000" />
+      <workItem from="1710659767742" duration="21700000" />
+      <workItem from="1710695537447" duration="463000" />
+      <workItem from="1710697149962" duration="2019000" />
+      <workItem from="1710768825098" duration="548000" />
+      <workItem from="1711085990170" duration="787000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -168,6 +199,11 @@
           <url>file://$PROJECT_DIR$/src/main/java/org/example/decision/tree/impl/ScorePlayerActionTree.java</url>
           <line>185</line>
           <option name="timeStamp" value="11" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/example/decision/tree/impl/GoaliePlayerTimedActionTree.java</url>
+          <line>163</line>
+          <option name="timeStamp" value="32" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
