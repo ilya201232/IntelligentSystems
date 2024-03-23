@@ -63,6 +63,7 @@ public class Receiver {
             case "sense_body" -> parseSenseBody(messageContent);
             case "see" -> parseSee(messageContent);
             case "hear" -> parseHear(messageContent);
+            case "ok" -> parseOK(messageContent);
             default -> {
                 log.warn("Failed to parse {} message type.", messageName);
                 yield new MessageDTO(-1, MessageType.NOT_IMPLEMENTED);
@@ -75,6 +76,10 @@ public class Receiver {
 
         return messageDTO;
 
+    }
+
+    private MessageDTO parseOK(String messageContent) {
+        return new OkDTO();
     }
 
     private InitDTO parseInit(String messageContent) {

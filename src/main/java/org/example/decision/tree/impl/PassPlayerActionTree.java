@@ -204,7 +204,7 @@ public class PassPlayerActionTree extends ActionTree {
                         kickBallCycle = perception.getCycleNumber();
                         // TODO: Maybe adjust power by distance to player
 
-                        Optional<Vector2> playerPosition = PlayerUtils.calcAnotherObjectPosition(perception, knowledge, player.get());
+                        Optional<Vector2> playerPosition = PlayerUtils.calcAnotherObjectPosition(perception, player.get());
 
                         if (playerPosition.isEmpty())
                             return new KickAction(KICK_BALL_TO_PLAYER_POWER, Math.toDegrees(player.get().getDirection()), true);
@@ -215,7 +215,7 @@ public class PassPlayerActionTree extends ActionTree {
                                 "f p " + (knowledge.getTeamSide() == Side.LEFT ? "r" : "l") + " " + (isScorePlayerTop ? "t" : "b")
                         );
 
-                        Optional<Double> targetAngle = PlayerUtils.calcRotationToCoordinates(Vector2.getPositionInMiddle(playerPosition.get(), markerPosition), perception, knowledge);
+                        Optional<Double> targetAngle = PlayerUtils.calcRotationToCoordinates(Vector2.getPositionInMiddle(playerPosition.get(), markerPosition), perception);
 
                         if (targetAngle.isEmpty()) {
                             return new KickAction(KICK_BALL_TO_PLAYER_POWER, Math.toDegrees(player.get().getDirection()), true);

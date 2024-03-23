@@ -6,7 +6,7 @@ public enum PlayModeType {
 
     BEFORE_KICK_OFF, PLAY_ON,
     TIME_OVER, KICK_OFF, KICK_IN, FREE_KICK, CORNER_KICK,
-    GOAL_KICK, GOAL, // Documentation had stars between "Side". It may mean smth
+    GOAL_KICK, // Documentation had stars between "Side". It may mean smth
     DROP_BALL,
     OFFSIDE, PENALTY_KICK, FOUL_CHARGE, BACK_PASS, FREE_KICK_FAULT, INDIRECT_FREE_KICK, ILLEGAL_DEFENSE;
     public static PlayModeType parsePlayModeType(String playModeType) throws FailedToParseException {
@@ -19,7 +19,6 @@ public enum PlayModeType {
             case "free_kick" -> FREE_KICK;
             case "corner_kick" -> CORNER_KICK;
             case "goal_kick" -> GOAL_KICK;
-            case "goal" -> GOAL;
             case "drop_ball" -> DROP_BALL;
             case "offside" -> OFFSIDE;
             case "penalty_kick" -> PENALTY_KICK;

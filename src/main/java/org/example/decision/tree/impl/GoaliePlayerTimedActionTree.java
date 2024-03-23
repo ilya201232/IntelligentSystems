@@ -173,7 +173,7 @@ public class GoaliePlayerTimedActionTree extends TimedActionTree {
                     lookoutProgress = 0;
                     needToRealign = false;
 
-                    Optional<Vector2> ballPosition = PlayerUtils.calcAnotherObjectPosition(perception, knowledge, ball);
+                    Optional<Vector2> ballPosition = PlayerUtils.calcAnotherObjectPosition(perception, ball);
 
                     if (ballPosition.isEmpty()) {
                         // Couldn't calculate position => run to it any way
@@ -238,7 +238,7 @@ public class GoaliePlayerTimedActionTree extends TimedActionTree {
             lastSentCatch = Integer.MAX_VALUE;
 
             // Calculate this player position
-            Optional<Vector2> playerPosition = PlayerUtils.calcThisPlayerPosition(perception, knowledge);
+            Optional<Vector2> playerPosition = PlayerUtils.calcThisPlayerPosition(perception);
 
             if (playerPosition.isEmpty()) {
                 log.error("Can't proceed! Player calculation has failed!");
@@ -393,7 +393,7 @@ public class GoaliePlayerTimedActionTree extends TimedActionTree {
             Vector2 markerPosition = lookoutMarkersPositions.get(lookoutProgress);
             lookoutProgress++;
 
-            Optional<Double> rotationOptional = PlayerUtils.calcRotationToCoordinates(markerPosition, perception, knowledge);
+            Optional<Double> rotationOptional = PlayerUtils.calcRotationToCoordinates(markerPosition, perception);
 
             if (rotationOptional.isEmpty()) {
                 needToRealign = true;
@@ -461,7 +461,7 @@ public class GoaliePlayerTimedActionTree extends TimedActionTree {
                 return new TurnAction(SEEK_TURN_STEP);
             }
 
-            Optional<Vector2> ballPositionOpt = PlayerUtils.calcAnotherObjectPosition(perception, knowledge, ball);
+            Optional<Vector2> ballPositionOpt = PlayerUtils.calcAnotherObjectPosition(perception, ball);
 
             if (ballPositionOpt.isEmpty()) {
                 // Failed to calculate ball position for some reason. Just go to it then.
@@ -477,7 +477,7 @@ public class GoaliePlayerTimedActionTree extends TimedActionTree {
                 return catchBallTree.getResultAction(perception, knowledge);
             }
 
-            Optional<Vector2> playerPosition = PlayerUtils.calcThisPlayerPosition(perception, knowledge);
+            Optional<Vector2> playerPosition = PlayerUtils.calcThisPlayerPosition(perception);
 
             if (playerPosition.isEmpty()) {
                 return new DashAction(DASH_TO_BALL_POWER, Math.toDegrees(ball.getDirection()), true);
@@ -537,13 +537,13 @@ public class GoaliePlayerTimedActionTree extends TimedActionTree {
                                 return new DashAction(DASH_TO_BALL_POWER, Math.toDegrees(ball.getDirection()), true);
                             }
 
-                            Optional<Vector2> lastBallPosition = PlayerUtils.calcAnotherObjectPosition(lastPerception, knowledge, lastSeenBall);
+                            Optional<Vector2> lastBallPosition = PlayerUtils.calcAnotherObjectPosition(lastPerception, lastSeenBall);
 
                             if (lastBallPosition.isEmpty()) {
                                 return new DashAction(DASH_TO_BALL_POWER, Math.toDegrees(ball.getDirection()), true);
                             }
 
-                            Optional<Vector2> ballPosition = PlayerUtils.calcAnotherObjectPosition(perception, knowledge, ball);
+                            Optional<Vector2> ballPosition = PlayerUtils.calcAnotherObjectPosition(perception, ball);
 
                             if (ballPosition.isEmpty()) {
                                 return new DashAction(DASH_TO_BALL_POWER, Math.toDegrees(ball.getDirection()), true);
@@ -551,7 +551,7 @@ public class GoaliePlayerTimedActionTree extends TimedActionTree {
 
                             Vector2 ballMovementVector = ballPosition.get().minus(lastBallPosition.get());
                             Vector2 approximatePosition = ballPosition.get().plus(ballMovementVector.multiply(2));
-                            Optional<Double> direction = PlayerUtils.calcRotationToCoordinates(approximatePosition, perception, knowledge);
+                            Optional<Double> direction = PlayerUtils.calcRotationToCoordinates(approximatePosition, perception);
 
                             return new DashAction(DASH_TO_BALL_POWER, Math.toDegrees(direction.orElse(ball.getDirection())), true);
                         }
@@ -579,7 +579,7 @@ public class GoaliePlayerTimedActionTree extends TimedActionTree {
                 lookoutProgress = 0;
                 needToRealign = true;
 
-                double directionToCenter = PlayerUtils.calcRotationToCoordinates(new Vector2(), perception, knowledge).orElse(0d);
+                double directionToCenter = PlayerUtils.calcRotationToCoordinates(new Vector2(), perception).orElse(0d);
                 return new KickAction(BALL_KICK_POWER, Math.toDegrees(directionToCenter), true);
             }
 

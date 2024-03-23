@@ -203,7 +203,7 @@ public class ReqularPlayerTimedActionTree extends TimedActionTree {
             if (getTimerValue(sideTimerUUID).orElse(0) > SIDE_TIMER_POINT + (random.nextBoolean() ? SIDE_TIMER_POINT_ERR : -SIDE_TIMER_POINT_ERR)) {
                 // Kick to side flags
 
-                Optional<Vector2> playerPosition = PlayerUtils.calcThisPlayerPosition(perception, knowledge);
+                Optional<Vector2> playerPosition = PlayerUtils.calcThisPlayerPosition(perception);
 
                 if (playerPosition.isPresent() && (
                         (knowledge.getTeamSide() == Side.LEFT && playerPosition.get().getX() < (knowledge.getMarkersPositions().get(goalBFlagSideName).getX() - STOP_SIDE_KICKS_DIST)) ||

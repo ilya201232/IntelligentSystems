@@ -6,10 +6,7 @@ import org.example.model.Knowledge;
 import org.example.model.Perception;
 import org.example.model.base.GameObject;
 import org.example.model.object.Marker;
-import org.example.model.object.Player;
-import org.example.model.unit.Side;
 import org.example.model.unit.Vector2;
-import org.example.sender.action.TurnAction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,12 +17,12 @@ public class PlayerUtils {
 
     public static Optional<Double> calcRotationToMarker(String markerName, Perception perception, Knowledge knowledge) {
 
-        return calcRotationToCoordinates(knowledge.getMarkersPositions().get(markerName), perception, knowledge);
+        return calcRotationToCoordinates(knowledge.getMarkersPositions().get(markerName), perception);
     }
 
-    public static Optional<Double> calcRotationToCoordinates(Vector2 coordinates, Perception perception, Knowledge knowledge) {
+    public static Optional<Double> calcRotationToCoordinates(Vector2 coordinates, Perception perception) {
 
-        Optional<Vector2> playerPosition = PlayerUtils.calcThisPlayerPosition(perception, knowledge);
+        Optional<Vector2> playerPosition = PlayerUtils.calcThisPlayerPosition(perception);
 
         if (playerPosition.isEmpty()) {
             return Optional.empty();
@@ -48,7 +45,7 @@ public class PlayerUtils {
         }
     }
 
-    public static Optional<Vector2> calcThisPlayerPosition(Perception perception, Knowledge knowledge) {
+    public static Optional<Vector2> calcThisPlayerPosition(Perception perception) {
 
         if (!perception.isHasGotSeeInfo() || !perception.isHasGotSenseBodyInfo()) {
             log.debug("No enough data for position calculation...");
@@ -98,10 +95,14 @@ public class PlayerUtils {
 
     }
 
-    public static Optional<Vector2> calcAnotherObjectPosition(Perception perception, Knowledge knowledge, GameObject object) {
+    public static Optional<Vector2> calcAnotherObjectPosition(Perception perception, GameObject object) {
 
         if (!perception.isHasGotSeeInfo() || !perception.isHasGotSenseBodyInfo()) {
             log.debug("No enough data for position calculation...");
+            return Optional.empty();
+        }
+
+        if (object == null) {
             return Optional.empty();
         }
 
@@ -109,7 +110,7 @@ public class PlayerUtils {
             return Optional.empty();
         }
 
-        Optional<Vector2> playerPosition = calcThisPlayerPosition(perception, knowledge);
+        Optional<Vector2> playerPosition = calcThisPlayerPosition(perception);
 
         if (playerPosition.isEmpty()) {
             log.debug("Failed to calculate player position => can't calculate object position.");

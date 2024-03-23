@@ -3,6 +3,7 @@ package org.example.controller;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.example.decision.DecisionDelegate;
+import org.example.decision.controller.handler.impl.*;
 import org.example.decision.tree.impl.*;
 import org.example.exception.FailedToCalculateException;
 import org.example.model.Knowledge;
@@ -19,16 +20,19 @@ import org.example.sender.action.EmptyAction;
 import org.example.decision.tree.ActionTree;
 
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j
 public class PlayerController implements Runnable {
 
+    private final InetAddress address;
     private final Knowledge knowledge;
     private PerceptionFormer perceptionFormer;
     private final DecisionDelegate decisionDelegate;
@@ -42,7 +46,7 @@ public class PlayerController implements Runnable {
     private final Vector2 startPos;
     private boolean isInitialized = false;
 
-    public static PlayerController createPlayerForLab4(String teamName, boolean isGoalie, Vector2 startPos, int teammatesAmount, boolean isPassing) {
+    /*public static PlayerController createPlayerForLab4(String teamName, boolean isGoalie, Vector2 startPos, int teammatesAmount, boolean isPassing) {
         Knowledge knowledge = new Knowledge(teamName, isGoalie, startPos, teammatesAmount);
 
         ActionTree actionTree;
@@ -60,20 +64,48 @@ public class PlayerController implements Runnable {
         DecisionDelegate decisionDelegate = new DecisionDelegate(actionTree);
 
         return new PlayerController(knowledge, startPos, decisionDelegate);
+    }*/
+
+    public static PlayerController createGoaliePlayer(String teamName, Vector2 startPos, int teammatesAmount, Vector2 refPoint, InetAddress address) {
+        Knowledge knowledge = new Knowledge(teamName, true, startPos, teammatesAmount);
+
+        DecisionDelegate decisionDelegate = new DecisionDelegate(new GoalieControllerHandler(knowledge, refPoint));
+
+        return new PlayerController(knowledge, startPos, decisionDelegate, address);
     }
 
-    private PlayerController(Knowledge knowledge, Vector2 startPos, DecisionDelegate decisionDelegate) {
+    public static PlayerController createGuardPlayer(String teamName, Vector2 startPos, int teammatesAmount, Vector2 refPoint, boolean isTop, InetAddress address) {
+        Knowledge knowledge = new Knowledge(teamName, false, startPos, teammatesAmount);
+
+        DecisionDelegate decisionDelegate = new DecisionDelegate(new GuardControllerHandler(knowledge, refPoint, isTop));
+
+        return new PlayerController(knowledge, startPos, decisionDelegate, address);
+    }
+
+    public static PlayerController createMidguardPlayer(String teamName, Vector2 startPos, int teammatesAmount, Vector2 refPoint, boolean isTop, AtomicBoolean isInit, InetAddress address) {
+        Knowledge knowledge = new Knowledge(teamName, false, startPos, teammatesAmount);
+
+        DecisionDelegate decisionDelegate = new DecisionDelegate(new MidguardControllerHandler(knowledge, refPoint, isTop, isInit));
+
+        return new PlayerController(knowledge, startPos, decisionDelegate, address);
+    }
+
+    public static PlayerController createAttackPlayer(String teamName, Vector2 startPos, int teammatesAmount, Vector2 refPoint, boolean isTop, InetAddress address) {
+        Knowledge knowledge = new Knowledge(teamName, false, startPos, teammatesAmount);
+
+        DecisionDelegate decisionDelegate = new DecisionDelegate(new AttackPlayerControllerHandler(knowledge, refPoint, isTop));
+
+        return new PlayerController(knowledge, startPos, decisionDelegate, address);
+    }
+
+    private PlayerController(Knowledge knowledge, Vector2 startPos, DecisionDelegate decisionDelegate, InetAddress address) {
         this.knowledge = knowledge;
         this.startPos = startPos;
         this.decisionDelegate = decisionDelegate;
+        this.address = address;
     }
 
-    public PlayerController(String teamName, Vector2 startPos) {
-        knowledge = new Knowledge(teamName, false, startPos, 0);
-        this.startPos = startPos;
-
-        decisionDelegate = new DecisionDelegate(ActionTree.createEmptyActionTree());
-    }
+    /*
 
     public PlayerController(String teamName, boolean isGoalie, Vector2 startPos, int teammatesAmount) {
         knowledge = new Knowledge(teamName, isGoalie, startPos, teammatesAmount);
@@ -88,24 +120,26 @@ public class PlayerController implements Runnable {
         }
 
         decisionDelegate = new DecisionDelegate(actionTree);
-    }
+    }*/
 
     @Override
     public void run() {
         try (DatagramSocket socket = new DatagramSocket()) {
             perceptionFormer = new PerceptionFormer(knowledge, socket);
-            sender = new Sender(socket, knowledge);
+            sender = new Sender(socket, knowledge, address);
 
             try (ExecutorService executorService = Executors.newSingleThreadExecutor()) {
                 Future<?> future = executorService.submit(perceptionFormer);
 
                 try {
                     sender.sendInit(knowledge.getTeamName(), "7", knowledge.isGoalie());
+                    Thread.sleep(10);
                     sender.sendSyncSee(); // Will sync all messages to cycle time by rounding up!!!
                     while (!future.isDone()) {
                         if (knowledge.isServerReady()) {
                             if (!isInitialized) {
                                 sender.sendMove(startPos);
+                                decisionDelegate.init();
                                 isInitialized = true;
                             }
                         } else {

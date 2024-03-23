@@ -192,7 +192,7 @@ public class ScorePlayerActionTree extends ActionTree {
 
                         // No check for presence since this is performed in calcRotationToMarker(...)
                         //noinspection OptionalGetWithoutIsPresent
-                        Vector2 playerPosition = PlayerUtils.calcThisPlayerPosition(perception, knowledge).get();
+                        Vector2 playerPosition = PlayerUtils.calcThisPlayerPosition(perception).get();
 
                         double realRot = baseRotation.get();
                         if (realRot > 0) {

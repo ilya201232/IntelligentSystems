@@ -6,6 +6,6 @@ public enum MessageType {
 
     SENSE_BODY, SEE, HEAR,
 
-    NOT_IMPLEMENTED
+    OK, NOT_IMPLEMENTED
 
 }

@@ -153,7 +153,7 @@ public class GoaliePlayerActionTree extends ActionTree {
             lastSentCatch = Integer.MAX_VALUE;
 
             // Calculate this player position
-            Optional<Vector2> playerPosition = PlayerUtils.calcThisPlayerPosition(perception, knowledge);
+            Optional<Vector2> playerPosition = PlayerUtils.calcThisPlayerPosition(perception);
 
             if (playerPosition.isEmpty()) {
                 log.error("Can't proceed! Player calculation has failed!");
@@ -356,7 +356,7 @@ public class GoaliePlayerActionTree extends ActionTree {
                         if (ball.getDistance() > 5 && Math.abs(ball.getDirection()) > BALL_IN_FRONT_DIRECTION_DELTA_RAD) {
                             // Dash to the side until the ball is in front of goalie
 
-                            Optional<Vector2> playerPosition = PlayerUtils.calcThisPlayerPosition(perception, knowledge);
+                            Optional<Vector2> playerPosition = PlayerUtils.calcThisPlayerPosition(perception);
 
                             if (playerPosition.isEmpty()) {
                                 return new DashAction(DASH_TO_BALL_POWER, Math.toDegrees(ball.getDirection()));
@@ -419,7 +419,7 @@ public class GoaliePlayerActionTree extends ActionTree {
                 if (ball.getDistance() > 7 && Math.abs(ball.getDirection()) > BALL_IN_FRONT_DIRECTION_DELTA_RAD) {
                     // Dash to the side until the ball is in front of goalie
 
-                    Optional<Vector2> playerPosition = PlayerUtils.calcThisPlayerPosition(perception, knowledge);
+                    Optional<Vector2> playerPosition = PlayerUtils.calcThisPlayerPosition(perception);
 
                     if (playerPosition.isEmpty()) {
                         return new DashAction(DASH_TO_BALL_POWER, Math.toDegrees(ball.getDirection()));

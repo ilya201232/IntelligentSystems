@@ -76,6 +76,9 @@ public class PerceptionFormer implements Runnable {
     }
 
     private void formPerception(MessageDTO dto) throws IllegalStateException {
+        if (dto.getMessageType() == MessageType.OK)
+            return;
+
         if (formingPerception == null &&
                 dto.getMessageType() != MessageType.INIT && dto.getMessageType() != MessageType.SERVER_PARAM &&
                 dto.getMessageType() != MessageType.PLAYER_PARAM && dto.getMessageType() != MessageType.PLAYER_TYPE &&

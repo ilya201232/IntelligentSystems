@@ -20,9 +20,9 @@ public class Sender {
     private final InetAddress address;
     private final Knowledge knowledge;
 
-    public Sender(DatagramSocket socket, Knowledge knowledge) throws UnknownHostException {
+    public Sender(DatagramSocket socket, Knowledge knowledge, InetAddress address) throws UnknownHostException {
         this.socket = socket;
-        address = InetAddress.getByAddress(new byte[]{(byte) 172, 21, 47, (byte) 255});
+        this.address = address;
         this.knowledge = knowledge;
     }
 

@@ -1,0 +1,17 @@
+
+r
+java:S3008"\Rename this field "BALL_SEEK_ANG_DEG" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ã‚ª”
+x
+java:S3008"]Rename this field "DASH_TO_BALL_POWER" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(â¬…Éüÿÿÿÿ
+o
+java:S3008"YRename this field "CATCH_DISTANCE" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(­øÀ¤
+m
+java:S3776#"RRefactor this method to reduce its Cognitive Complexity from 19 to the 15 allowed.(¶–ã¹øÿÿÿÿ
+a
+java:S1854&"FRemove this useless assignment to local variable "idleControllerData".(˜œ‚Ûÿÿÿÿÿ
+X
+java:S1854%"CRemove this useless assignment to local variable "ballTrackerData".(·õ©?
+I
+java:S1481%"4Remove this unused "ballTrackerData" local variable.(·õ©?
+R
+java:S1481&"7Remove this unused "idleControllerData" local variable.(˜œ‚Ûÿÿÿÿÿ

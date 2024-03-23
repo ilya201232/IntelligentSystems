@@ -2,6 +2,7 @@ package org.example.decision;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.decision.controller.handler.BaseControllersHandler;
 import org.example.decision.tree.ActionTree;
 import org.example.model.Knowledge;
 import org.example.model.Perception;
@@ -15,16 +16,17 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class DecisionDelegate {
 
-    private final ActionTree actionTree;
+//    private final ActionTree actionTree;
+    private final BaseControllersHandler controllersHandler;
     private LocalDateTime lastUsedPerceptionMoment = LocalDateTime.MIN;
 
     private Action lastAction = EmptyAction.instance;
 
     public Action planAction(Perception perception) {
 
-        actionTree.alwaysAction();
+//        actionTree.alwaysAction();
 
-        if (actionTree.checkMinimumConditionForPassingPerception(perception)) {
+        if (!perception.isHasGotSeeInfo()) {
             log.debug("Received perception doesn't have all information needed for action planning.");
 
             if (lastAction.isRepeatable()) {
@@ -50,10 +52,12 @@ public class DecisionDelegate {
             }
         }
 
-        lastAction = actionTree.decideAction(perception);
-        actionTree.setLastPerception(perception);
+        lastAction = controllersHandler.decideAction(perception);
 
         return lastAction;
     }
 
+    public void init() {
+        controllersHandler.init();
+    }
 }
